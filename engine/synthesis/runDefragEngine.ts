@@ -1,19 +1,35 @@
 import { DefragContext, DefragInsight } from "../types"
+import { computeSkyState } from "../timing/skyState"
+import { computeRelationalState } from "../relational/relationalState"
 
 export async function runDefragEngine(
   context: DefragContext
 ): Promise<DefragInsight> {
 
-  // placeholder synthesis
+  const sky = await computeSkyState(
+    context.timing.timestamp,
+    context.timing.location
+  )
+
+  const relational = computeRelationalState(
+    context.relationship.participants
+  )
 
   return {
-    relationalState: "Tension building",
-    pressureLevel: "Medium",
+    relationalState: relational.tensionLevel === "high"
+      ? "Relational pressure building"
+      : "Relational system unsettled",
+
+    pressureLevel: relational.tensionLevel,
+
     explanation:
-      "Signals indicate rising pressure in the relational system. Timing conditions suggest sensitivity to direct confrontation.",
+      "Multiple signals suggest rising sensitivity in the relational system. Timing conditions may increase emotional reactivity.",
+
     recommendedAction:
-      "Lower pressure and allow time before initiating deeper discussion.",
+      "Reduce pressure and allow space before attempting to resolve the issue directly.",
+
     messageOption:
-      "I want to handle this carefully. I'm open to talking whenever it feels like a better time."
+      "I want to handle this carefully. I'm open to talking when it feels like a better time."
   }
+
 }
