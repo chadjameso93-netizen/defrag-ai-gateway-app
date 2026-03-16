@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { userProfileSchema } from "@/lib/profile/schema";
-import { supabase } from "@/lib/supabase/client";
+import { getSupabaseAdmin } from "@/lib/supabase/client";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,7 +15,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (!body.userId) {
+      return NextResponse.json(
+        { error: "userId is required." },
+        { status: 400 }
+      );
+    }
+
     const profile = parsed.data;
+    const supabase = getSupabaseAdmin();
 
     const { data, error } = await supabase
       .from("profiles")
@@ -40,8 +48,10 @@ export async function POST(req: NextRequest) {
       ok: true,
       profile: data
     });
-
   } catch (err) {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    const message =
+      err instanceof Error ? err.message : "Server error";
+
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
