@@ -15,11 +15,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const fallbackLink =
+      process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ||
+      "https://buy.stripe.com/5kQ28t3ryd72ctVgxDaEE02";
+
     if (!process.env.STRIPE_PRICE_ID) {
-      return NextResponse.json(
-        { error: "Missing STRIPE_PRICE_ID" },
-        { status: 500 }
-      );
+      return NextResponse.json({
+        ok: true,
+        url: fallbackLink,
+        mode: "payment_link"
+      });
     }
 
     const stripe = getStripe();
@@ -44,7 +49,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       ok: true,
-      url: session.url
+      url: session.url,
+      mode: "subscription"
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Checkout error";
