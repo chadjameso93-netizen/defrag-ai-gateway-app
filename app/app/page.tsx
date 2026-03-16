@@ -21,7 +21,7 @@ export default function AppPage() {
   const [text, setText] = useState("");
   const [silenceDays, setSilenceDays] = useState(0);
   const [argumentThisWeek, setArgumentThisWeek] = useState(false);
-  const [feelingPulledIn, setFeelingPulledIn] = useState(false);
+  const [feelingPulledIn, setFeelingPulIn] = useState(false);
   const [mixedSignals, setMixedSignals] = useState(false);
   const [repairAttemptIgnored, setRepairAttemptIgnored] = useState(false);
   const [sleepLow, setSleepLow] = useState(false);
@@ -44,13 +44,17 @@ export default function AppPage() {
   }
 
   return (
-    <main>
+    <main className="app-page">
       <TopNav />
-      <div className="shell app-wrap">
+      <div className="shell" style={{ paddingTop: 24, paddingBottom: 40 }}>
         <div className="app-grid">
-          <div className="card">
-            <h1 className="section-title">What happened?</h1>
-            <p className="muted">Write what happened in plain words. Defrag will help you slow it down and choose a better next move.</p>
+          <div className="input-card">
+            <div className="kicker">Defrag analysis</div>
+            <h1 className="section-title">Tell Defrag what happened</h1>
+            <p className="muted">
+              Use normal words. Keep it simple. Defrag will help you understand the moment
+              and choose the least harmful next step.
+            </p>
 
             <label className="label">Describe the situation</label>
             <textarea
@@ -60,28 +64,33 @@ export default function AppPage() {
               placeholder="Example: We argued two days ago. I sent a long message. They have not replied. I want to send another text tonight."
             />
 
-            <div className="grid grid-3" style={{ marginTop: 16 }}>
-              <label className="card stat"><input type="checkbox" checked={argumentThisWeek} onChange={(e) => setArgumentThisWeek(e.target.checked)} /> Argument this week</label>
-              <label className="card stat"><input type="checkbox" checked={feelingPulledIn} onChange={(e) => setFeelingPulledIn(e.target.checked)} /> I feel pulled to act fast</label>
-              <label className="card stat"><input type="checkbox" checked={mixedSignals} onChange={(e) => setMixedSignals(e.target.checked)} /> Mixed signals</label>
-              <label className="card stat"><input type="checkbox" checked={repairAttemptIgnored} onChange={(e) => setRepairAttemptIgnored(e.target.checked)} /> My repair attempt got ignored</label>
-              <label className="card stat"><input type="checkbox" checked={sleepLow} onChange={(e) => setSleepLow(e.target.checked)} /> I am tired or worn down</label>
-              <label className="card stat">Days without a reply <input className="input" type="number" min="0" value={silenceDays} onChange={(e) => setSilenceDays(Number(e.target.value || 0))} /></label>
+            <div className="check-grid">
+              <label className="check-card"><input type="checkbox" checked={argumentThisWeek} onChange={(e) => setArgumentThisWeek(e.target.checked)} /><span>There was an argument this week</span></label>
+              <label className="check-card"><input type="checkbox" checked={feelingPulledIn} onChange={(e) => setFeelingPulIn(e.target.checked)} /><span>I feel pulled to act fast</span></label>
+              <label className="check-card"><input type="checkbox" checked={mixedSignals} onChange={(e) => setMixedSignals(e.target.checked)} /><span>I am getting mixed signals</span></label>
+              <label className="check-card"><input type="checkbox" checked={repairAttemptIgnored} onChange={(e) => setRepairAttemptIgnored(e.target.checked)} /><span>A repair attempt was ignored</span></label>
+              <label className="check-card"><input type="checkbox" checked={sleepLow} onChange={(e) => setSleepLow(e.target.checked)} /><span>I am tired or worn down</span></label>
+              <label className="check-card">
+                <span style={{ width: "100%" }}>
+                  <div className="label" style={{ marginBottom: 6 }}>Days without a reply</div>
+                  <input className="input" type="number" min="0" value={silenceDays} onChange={(e) => setSilenceDays(Number(e.target.value || 0))} />
+                </span>
+              </label>
             </div>
 
             <div className="actions">
-              <button className="btn" style={{ background: "#111827", color: "#fff", border: 0 }} disabled={!text.trim() || loading} onClick={() => run("/api/analyze")}>
+              <button className="btn btn-primary" disabled={!text.trim() || loading} onClick={() => run("/api/analyze")}>
                 {loading ? "Working..." : "Analyze"}
               </button>
-              <button className="btn" style={{ background: "#eef2ff", color: "#3730a3", border: 0 }} disabled={!text.trim() || loading} onClick={() => run("/api/simulate")}>
+              <button className="btn" style={{ background: "#eef2ff", color: "#4338ca" }} disabled={!text.trim() || loading} onClick={() => run("/api/simulate")}>
                 Test a message
               </button>
             </div>
           </div>
 
-          <div className="grid">
-            <div className="card">
-              <h2 style={{ marginTop: 0 }}>Live relationship view</h2>
+          <div className="side-stack">
+            <div className="result-card">
+              <div className="kicker">Live view</div>
               {result ? (
                 <SystemMap people={result.simpleMap.people} links={result.simpleMap.links} />
               ) : (
@@ -91,20 +100,22 @@ export default function AppPage() {
               )}
             </div>
 
-            <div className="card">
-              <h2 style={{ marginTop: 0 }}>Your result</h2>
+            <div className="result-card">
+              <div className="kicker">Your result</div>
               {!result ? (
-                <p className="muted">You will see a clear explanation, the current risk, what to do now, and one message you can send.</p>
+                <p className="muted">You will see a clear read on what may be happening, how risky the moment feels, and one better next move.</p>
               ) : (
                 <>
-                  <p><strong>What seems to be happening:</strong> {result.whatSeemsToBeHappening}</p>
-                  <p><strong>Current risk:</strong> {result.currentRisk}</p>
-                  <p><strong>What to do now:</strong> {result.whatToDoNow}</p>
-                  <p><strong>Pressure outlook:</strong> {result.pressureOutlook}</p>
-                  <p><strong>What to avoid:</strong> {result.whatToAvoid}</p>
-                  <div className="card" style={{ background: "#f8faff" }}>
-                    <strong>Message you can send</strong>
-                    <pre>{result.messageYouCanSend}</pre>
+                  <div className="result-block"><div className="result-title">What seems to be happening</div><div className="result-copy">{result.whatSeemsToBeHappening}</div></div>
+                  <div className="result-block"><div className="result-title">Current risk</div><div className="result-copy">{result.currentRisk}</div></div>
+                  <div className="result-block"><div className="result-title">What to do now</div><div className="result-copy">{result.whatToDoNow}</div></div>
+                  <div className="result-block"><div className="result-title">Pressure outlook</div><div className="result-copy">{result.pressureOutlook}</div></div>
+                  <div className="result-block"><div className="result-title">What to avoid</div><div className="result-copy">{result.whatToAvoid}</div></div>
+                  <div className="result-block">
+                    <div className="message-box">
+                      <div className="result-title">Message you can send</div>
+                      <div className="result-copy">{result.messageYouCanSend}</div>
+                    </div>
                   </div>
                 </>
               )}

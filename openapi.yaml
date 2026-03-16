@@ -3,7 +3,7 @@ info:
   title: Defrag API
   version: 1.0.0
 servers:
-  - url: https://YOUR-VERCEL-URL
+  - url: https://defrag-premium.vercel.app
 paths:
   /api/analyze:
     post:

@@ -5,21 +5,26 @@ export default function Pricing() {
   return (
     <main>
       <TopNav />
-      <div className="shell" style={{ paddingTop: 24 }}>
-        <h1 className="section-title">Pricing</h1>
-        <div className="grid grid-3" style={{ marginTop: 24 }}>
+      <div className="shell section">
+        <div className="kicker">Pricing</div>
+        <h1 className="section-title">Choose your pace</h1>
+        <p className="muted" style={{ maxWidth: 720 }}>
+          Start free, then move to Pro when you want more consistent support, more message testing, and better running context.
+        </p>
+
+        <div className="price-grid" style={{ marginTop: 24 }}>
           <div className="card">
-            <h3>Free</h3>
-            <p className="muted">A simple way to try Defrag.</p>
-            <p><strong>$0</strong></p>
+            <h2>Free</h2>
+            <div className="price-big">$0</div>
             <p className="muted">A few analyses and message tests.</p>
           </div>
-          <div className="card dark">
-            <h3>Defrag Pro</h3>
-            <p style={{ color: "rgba(255,255,255,.8)" }}>For ongoing use.</p>
-            <p><strong>$19/month</strong></p>
-            <p style={{ color: "rgba(255,255,255,.8)" }}>More analysis, message testing, and saved history.</p>
-            <a className="btn btn-primary" href={href} style={{ marginTop: 8 }}>Start Pro</a>
+
+          <div className="card card-dark">
+            <h2>Defrag Pro</h2>
+            <div className="price-big">$19<span style={{ fontSize: 18, fontWeight: 600 }}>/month</span></div>
+            <p style={{ color: "rgba(255,255,255,.78)" }}>For regular use and deeper support.</p>
+            <a href={href} className="btn btn-primary" style={{ marginTop: 12 }}>Start Pro</a>
+            <div className="footer-note" style={{ marginTop: 12 }}>Cancel anytime.</div>
           </div>
         </div>
       </div>
