@@ -1,0 +1,41 @@
+openapi: 3.1.0
+info:
+  title: Defrag API
+  version: 1.0.0
+servers:
+  - url: https://YOUR-VERCEL-URL
+paths:
+  /api/analyze:
+    post:
+      operationId: analyzeSituation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                checkIn:
+                  type: object
+      responses:
+        "200":
+          description: Analysis result
+  /api/simulate:
+    post:
+      operationId: testMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                checkIn:
+                  type: object
+      responses:
+        "200":
+          description: Message test result
