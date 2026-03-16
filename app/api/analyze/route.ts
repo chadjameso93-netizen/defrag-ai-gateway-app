@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { runDefragPipeline } from "@/engine/pipeline";
 import { analyzeSchema } from "@/lib/validation";
+import { buildCurrentAppContext } from "@/engine/adapters/buildCurrentAppContext";
+import { runDefragEngine } from "@/engine/synthesis/runDefragEngine";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -14,10 +15,16 @@ export async function POST(req: NextRequest) {
   }
 
   const text = parsed.data.text;
-  const result = await runDefragPipeline(text);
+  const context = buildCurrentAppContext(text);
+  const result = await runDefragEngine(context);
 
   return NextResponse.json({
-    ...result,
+    whatSeemsToBeHappening: result.explanation,
+    currentRisk: result.pressureLevel,
+    whatToDoNow: result.recommendedAction,
+    messageYouCanSend: result.messageOption,
+    whatToAvoid: "Avoid long emotional messages, stacked follow-ups, and trying to resolve everything at once.",
+    pressureOutlook: result.relationalState,
     simpleMap: {
       people: [
         { id: "you", label: "You", x: 40, y: 190 },
