@@ -5,15 +5,18 @@ export type AstrologyProfile = {
   moonSign: string | null
   risingSign: string | null
   transitSensitivity: "low" | "medium" | "high"
+  source: "stub"
 }
 
 export function calculateNatalAstrology(person: PersonProfile): AstrologyProfile {
-  const hasExactTime = person.natal.birthTime && person.natal.birthTimeConfidence === "exact"
+  const hasExactTime =
+    !!person.natal.birthTime && person.natal.birthTimeConfidence === "exact"
 
   return {
     sunSign: null,
     moonSign: null,
     risingSign: hasExactTime ? null : null,
-    transitSensitivity: hasExactTime ? "high" : "medium"
+    transitSensitivity: hasExactTime ? "high" : "medium",
+    source: "stub"
   }
 }
