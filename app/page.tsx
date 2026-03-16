@@ -8,40 +8,36 @@ export default function HomePage() {
         <TopNav />
         <section className="shell hero-grid">
           <div>
-            <div className="kicker">Relational clarity</div>
-            <h1>Understand the moment. Lower the pressure. Choose the next move with care.</h1>
+            <div className="kicker">Defrag</div>
+            <h1>Clarity for complex relationship moments.</h1>
             <p>
-              Defrag helps you make sense of distance, mixed signals, silence,
-              and hard conversations so you can respond with more steadiness and less regret.
+              Understand what may be happening, how much pressure is building,
+              and what kind of next move is least likely to make things worse.
             </p>
+
             <div className="row" style={{ marginTop: 26 }}>
-              <Link href="/app" className="btn btn-primary">Start</Link>
+              <Link href="/app" className="btn btn-primary">Open Defrag</Link>
               <Link href="/pricing" className="btn btn-secondary">Pricing</Link>
             </div>
           </div>
 
           <div className="hero-card">
-            <div style={{ fontWeight: 800, fontSize: 18 }}>What Defrag gives you</div>
-            <p style={{ color: "rgba(255,255,255,.68)", lineHeight: 1.65 }}>
-              A calmer read on what may be happening, how tense the moment feels,
-              what to avoid, and what kind of next message is least likely to make things worse.
-            </p>
-            <div className="hero-metric">
-              <div className="mini-card">
-                <div className="label">What may be happening</div>
-                <div className="value" style={{ fontSize: 18 }}>Clearer</div>
-              </div>
-              <div className="mini-card">
-                <div className="label">Pressure level</div>
-                <div className="value" style={{ fontSize: 18 }}>Visible</div>
-              </div>
-              <div className="mini-card">
-                <div className="label">Next move</div>
-                <div className="value" style={{ fontSize: 18 }}>Calmer</div>
-              </div>
-              <div className="mini-card">
-                <div className="label">Message option</div>
-                <div className="value" style={{ fontSize: 18 }}>Ready</div>
+            <div style={{ fontWeight: 800, fontSize: 18, marginBottom: 14 }}>A calmer read, in seconds</div>
+
+            <div className="result-block">
+              <div className="result-title">What may be happening</div>
+              <div className="result-copy">The situation may be more sensitive than it looks, and pace matters more than force right now.</div>
+            </div>
+
+            <div className="result-block">
+              <div className="result-title">What helps now</div>
+              <div className="result-copy">Keep the next move short, low-pressure, and easy to receive.</div>
+            </div>
+
+            <div className="result-block">
+              <div className="message-box">
+                <div className="result-title">Message option</div>
+                <div className="result-copy">I want to handle this carefully. I’m open to talking when it feels like a better time.</div>
               </div>
             </div>
           </div>
@@ -50,21 +46,22 @@ export default function HomePage() {
 
       <section className="section">
         <div className="shell">
-          <div className="grid grid-3">
+          <div className="grid" style={{ gridTemplateColumns: "1.4fr .8fr", gap: 24 }}>
             <div className="card">
-              <div className="kicker">Clarity</div>
-              <h3>See what may be happening</h3>
-              <p className="muted">Get a simple explanation of the dynamics without jargon or overcomplication.</p>
+              <div className="kicker">What Defrag does</div>
+              <h3 style={{ fontSize: 28, marginTop: 0 }}>See the moment more clearly.</h3>
+              <p className="muted" style={{ maxWidth: 680 }}>
+                Defrag helps you interpret distance, silence, mixed signals, and rising tension.
+                It gives you a calmer read on what may be happening, what to avoid, and what to do next.
+              </p>
             </div>
+
             <div className="card">
-              <div className="kicker">Stability</div>
-              <h3>See when pressure is rising</h3>
-              <p className="muted">Understand whether the moment needs space, softness, or a direct response.</p>
-            </div>
-            <div className="card">
-              <div className="kicker">Action</div>
-              <h3>Choose a better next step</h3>
-              <p className="muted">Get one calm move and one message option that is more likely to help than harm.</p>
+              <div className="kicker">Use cases</div>
+              <p className="muted">Silence</p>
+              <p className="muted">Mixed signals</p>
+              <p className="muted">Hard conversations</p>
+              <p className="muted">Message drafting</p>
             </div>
           </div>
         </div>

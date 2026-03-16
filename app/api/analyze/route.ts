@@ -1,10 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { runDefragPipeline } from "@/engine/pipeline";
+import { analyzeSchema } from "@/lib/validation";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const text = String(body.text || "");
+  const parsed = analyzeSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.issues[0]?.message || "Invalid request." },
+      { status: 400 }
+    );
+  }
+
+  const text = parsed.data.text;
   const result = await runDefragPipeline(text);
+
   return NextResponse.json({
     ...result,
     simpleMap: {
