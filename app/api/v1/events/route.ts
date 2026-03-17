@@ -1,21 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-
-export async function GET(req: NextRequest) {
-  const relationshipId = req.nextUrl.searchParams.get("relationshipId");
-
-  return NextResponse.json({
-    ok: true,
-    relationshipId,
-    events: []
-  });
-}
+import { createEvent } from "@/lib/events/createEvent";
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
+  try {
+    const body = await req.json();
+    const event = await createEvent(body);
 
-  return NextResponse.json({
-    ok: true,
-    event: body,
-    next: "persist to timeline table"
-  });
+    return NextResponse.json({
+      ok: true,
+      event
+    });
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: err.message },
+      { status: 500 }
+    );
+  }
 }
