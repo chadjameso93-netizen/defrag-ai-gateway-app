@@ -1,25 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getDashboardOverview } from "@/lib/dashboard/getDashboardOverview";
+import { NextResponse } from "next/server";
+import { getSupabaseAdmin } from "@/lib/supabase/client";
 
-export async function GET(req: NextRequest) {
-  try {
-    const userId = req.nextUrl.searchParams.get("userId");
+export async function GET() {
+  const supabase = getSupabaseAdmin();
+  const userId = "11111111-1111-1111-1111-111111111111";
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: "userId is required." },
-        { status: 400 }
-      );
+  const { data: decision } = await supabase.from("decision_profiles").select("*").eq("user_id", userId).single();
+  const { data: baseline } = await supabase.from("relational_baselines").select("*").eq("user_id", userId).single();
+  const { data: narrative } = await supabase.from("narrative_seeds").select("*").eq("user_id", userId).single();
+
+  return NextResponse.json({
+    decision: decision?.decision_profile_json || {},
+    baseline: baseline?.baseline_json || {},
+    narrative: narrative?.narrative_json || {
+      headline: "You’re set up.",
+      body: "Start by asking about something current or add someone."
     }
-
-    const overview = await getDashboardOverview(userId);
-
-    return NextResponse.json({
-      ok: true,
-      overview
-    });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Server error";
-    return NextResponse.json({ error: message }, { status: 500 });
-  }
+  });
 }

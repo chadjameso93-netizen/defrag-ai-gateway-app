@@ -6,35 +6,12 @@ export async function persistProfileArtifacts(userId: string, artifacts: any) {
   await supabase.from("symbolic_profile_jobs").upsert({
     user_id: userId,
     status: "ready",
-    profile_version: "v1",
-    updated_at: new Date().toISOString()
-  }, { onConflict: "user_id" as any });
-
-  await supabase.from("person_symbolic_profile_raw").upsert({
-    user_id: userId,
-    normalized_birth_input_json: artifacts.normalizedBirthInput || {},
-    planetary_positions_json: {},
-    hd_activations_json: {},
-    chart_properties_json: {},
-    numerology_json: {},
-    calculation_version: "v1",
     updated_at: new Date().toISOString()
   }, { onConflict: "user_id" });
 
   await supabase.from("person_symbolic_profiles").upsert({
     user_id: userId,
     profile_status: "ready",
-    type: null,
-    authority: null,
-    strategy: null,
-    profile: null,
-    definition: null,
-    incarnation_cross_name: null,
-    signature: null,
-    not_self_theme: null,
-    defined_centers: [],
-    open_centers: [],
-    active_gates: [],
     precision_summary: artifacts.normalizedBirthInput?.birth_time_confidence || null,
     time_accuracy_state: artifacts.normalizedBirthInput?.birth_time_confidence || null,
     updated_at: new Date().toISOString()
