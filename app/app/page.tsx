@@ -71,7 +71,7 @@ function AnalysisSurface({
 }: any) {
   return (
     <section className="analysis-surface-minimal">
-      <div className="analysis-surface-head">
+      <div className="analysis-surface-head"><SignalStrip />
         <div className="kicker">Live read</div>
         <div className="analysis-surface-title">Read the situation</div>
         <p className="muted">
@@ -125,7 +125,7 @@ function AnalysisSurface({
           <>
             <div className="analysis-min-line">
               <span>System read</span>
-              <p>{result.whatSeemsToBeHappening}</p>
+              <p><><ExpandableInsight label="System read" summary={result.whatSeemsToBeHappening} detail="Derived from relational pressure patterns, pacing, and system-level dynamics." /></></p>
             </div>
             <div className="analysis-min-line">
               <span>Current risk</span>
