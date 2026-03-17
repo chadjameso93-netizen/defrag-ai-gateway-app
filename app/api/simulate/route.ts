@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkEntitlement } from "@/lib/entitlements/checkEntitlement";
 import { analyzeSchema } from "@/lib/validation";
 import { buildCurrentAppContext } from "@/engine/adapters/buildCurrentAppContext";
 import { runDefragEngine } from "@/engine/synthesis/runDefragEngine";
+import { requirePro } from "@/lib/billing/requirePro";
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,35 +16,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const userId = body.userId || null;
+    const userId = body.userId || "11111111-1111-1111-1111-111111111111";
+
+    const block = await requirePro(userId);
+    if (block) return block;
+
     const text = parsed.data.text;
-
-    const entitlement = userId
-      ? await checkEntitlement(userId)
-      : { plan: "free", active: false };
-
-    const softer = /i care|i'm open|i am open|when it feels like a better time|no pressure/i.test(text);
-
-    if (!entitlement.active) {
-      return NextResponse.json({
-        gated: true,
-        upgradeUrl: process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "/pricing",
-        whatSeemsToBeHappening: softer
-          ? "This message is less likely to feel pressuring."
-          : "This message may land more heavily than you want.",
-        currentRisk: "Preview only",
-        whatToDoNow:
-          "Upgrade to Defrag Pro to unlock full message simulation and deeper pattern analysis.",
-        messageYouCanSend:
-          "I want to handle this carefully. I’m open to talking whenever it feels like a better time.",
-        whatToAvoid:
-          "Avoid sending multiple follow-ups or turning one message into a full conflict review.",
-        pressureOutlook: "Limited preview"
-      });
-    }
-
     const context = buildCurrentAppContext(text);
     const result = await runDefragEngine(context);
+
+    const softer = /i care|i'm open|i am open|when it feels like a better time|no pressure/i.test(text);
 
     return NextResponse.json({
       gated: false,
@@ -63,14 +44,13 @@ export async function POST(req: NextRequest) {
         : result.relationalState,
       simpleMap: {
         people: [
-          { id: "you", label: "You", x: 40, y: 190 },
-          { id: "them", label: "Them", x: 260, y: 60 },
-          { id: "outside", label: "Context", x: 470, y: 190 }
+          { id: "you", label: "You", x: 140, y: 180 },
+          { id: "them", label: "Other", x: 360, y: 180 },
+          { id: "external", label: "Pressure", x: 250, y: 80 }
         ],
         links: [
           { from: "you", to: "them", state: softer ? "cool" : "warm" },
-          { from: "outside", to: "them", state: "faded" },
-          { from: "outside", to: "you", state: "faded" }
+          { from: "them", to: "external", state: "faded" }
         ]
       }
     });
