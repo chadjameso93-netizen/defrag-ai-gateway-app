@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkEntitlement } from "@/lib/entitlements/checkEntitlement";
 import { analyzeSchema } from "@/lib/validation";
 import { buildCurrentAppContext } from "@/engine/adapters/buildCurrentAppContext";
 import { runDefragEngine } from "@/engine/synthesis/runDefragEngine";
@@ -7,6 +8,18 @@ import { requirePremium } from "@/lib/auth/entitlement";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+
+  const userId = body.userId;
+
+  const entitlement = await checkEntitlement(userId);
+
+  if (!entitlement.active) {
+    return NextResponse.json({
+      gated: true,
+      upgradeUrl: process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "/pricing",
+      message: "Upgrade to Defrag Pro to unlock full relational synthesis."
+    });
+  }
     const parsed = analyzeSchema.safeParse(body);
 
     if (!parsed.success) {
