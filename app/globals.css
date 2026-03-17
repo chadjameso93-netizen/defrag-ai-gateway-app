@@ -1045,3 +1045,88 @@ input:focus {
     padding: 22px;
   }
 }
+
+/* ===== CINEMATIC FIELD ===== */
+
+.cinematic-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.cinematic-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(120,160,255,.12), transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(180,120,255,.10), transparent 40%);
+  animation: slowDrift 18s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+.cinematic-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.6), rgba(0,0,0,.9));
+  z-index: 1;
+}
+
+.cinematic-hero .shell {
+  position: relative;
+  z-index: 2;
+}
+
+/* ===== PROOF SEQUENCE ===== */
+
+.proof-sequence {
+  display: grid;
+  gap: 22px;
+  margin-top: 10px;
+}
+
+.proof-line {
+  padding: 18px 0;
+  border-top: 1px solid rgba(255,255,255,.08);
+  transition: all .4s ease;
+}
+
+.proof-line:first-child {
+  border-top: 0;
+}
+
+.proof-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 8px;
+}
+
+.proof-line p {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgba(255,255,255,.92);
+  line-height: 1.5;
+}
+
+/* subtle emphasis on middle line */
+.proof-line:nth-child(2) {
+  color: white;
+  text-shadow: 0 0 18px rgba(120,160,255,.25);
+}
+
+/* ===== MOTION ===== */
+
+@keyframes slowDrift {
+  0% {
+    transform: scale(1) translate(0,0);
+  }
+  100% {
+    transform: scale(1.1) translate(-20px, 20px);
+  }
+}
+
