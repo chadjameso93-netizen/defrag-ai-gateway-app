@@ -2207,3 +2207,20 @@ h1, .landing-title, .analysis-title {
     grid-template-columns: 1fr;
   }
 }
+
+.chat-section {
+  margin-top: 14px;
+}
+
+.chat-section strong {
+  display: block;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 4px;
+}
+
+.chat-section p {
+  color: rgba(255,255,255,.9);
+}
