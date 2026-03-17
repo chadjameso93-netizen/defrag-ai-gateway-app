@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useLocalUser } from "@/hooks/useLocalUser";
 import EventComposer from "@/components/events/EventComposer";
 import InviteComposer from "@/components/invites/InviteComposer";
+import ParticipantComposer from "@/components/participants/ParticipantComposer";
+import LiveStateBadge from "@/components/state/LiveStateBadge";
 
 type RelationshipData = {
   relationship: any;
@@ -27,21 +29,25 @@ export default function RelationshipDetailPage({
   const userId = useLocalUser();
   const [data, setData] = useState<RelationshipData | null>(null);
   const [events, setEvents] = useState<EventItem[]>([]);
+  const [stateData, setStateData] = useState<{ state: string; pressure: number } | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function load() {
     setLoading(true);
 
-    const [relationshipRes, eventsRes] = await Promise.all([
+    const [relationshipRes, eventsRes, stateRes] = await Promise.all([
       fetch(`/api/v1/relationships/${params.id}`, { cache: "no-store" }),
-      fetch(`/api/v1/events?relationshipId=${encodeURIComponent(params.id)}`, { cache: "no-store" })
+      fetch(`/api/v1/events?relationshipId=${encodeURIComponent(params.id)}`, { cache: "no-store" }),
+      fetch(`/api/v1/relationships/state?relationshipId=${encodeURIComponent(params.id)}`, { cache: "no-store" })
     ]);
 
     const relationshipData = await relationshipRes.json();
     const eventsData = await eventsRes.json();
+    const stateJson = await stateRes.json();
 
     setData(relationshipData.ok ? relationshipData : null);
     setEvents(eventsData.events || []);
+    setStateData(stateJson.ok ? { state: stateJson.state, pressure: stateJson.pressure } : null);
     setLoading(false);
   }
 
@@ -58,8 +64,14 @@ export default function RelationshipDetailPage({
             {data?.relationship?.label || "Relationship"}
           </h1>
           <p className="muted">
-            Participant state, invites, and timeline events live here.
+            Participant state, invites, timeline events, and live relational state live here.
           </p>
+
+          {stateData ? (
+            <div style={{ marginTop: 20, maxWidth: 360 }}>
+              <LiveStateBadge state={stateData.state} pressure={stateData.pressure} />
+            </div>
+          ) : null}
 
           {loading ? (
             <div className="result-copy" style={{ marginTop: 20 }}>Loading...</div>
@@ -110,6 +122,7 @@ export default function RelationshipDetailPage({
               </div>
 
               <div style={{ display: "grid", gap: 20 }}>
+                <ParticipantComposer relationshipId={params.id} ownerUserId={userId} onCreated={load} />
                 <InviteComposer relationshipId={params.id} ownerUserId={userId} onCreated={load} />
                 <EventComposer relationshipId={params.id} onCreated={load} />
               </div>
