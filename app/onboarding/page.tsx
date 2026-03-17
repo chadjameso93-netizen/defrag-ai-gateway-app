@@ -25,7 +25,7 @@ export default function OnboardingPage() {
     setLoading(true);
     setError("");
 
-    const res = await fetch("/api/v1/profile", {
+    const res = await fetch("/api/v1/profile/initialize", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -34,11 +34,10 @@ export default function OnboardingPage() {
         userId,
         fullName,
         birthDate,
-        birthTime: effectiveBirthTime,
-        birthTimeConfidence: birthTimeKnown ? "exact" : "unknown_default_noon",
+        birthTime,
+        birthTimeKnown,
         birthPlace,
-        currentLocation,
-        onboardingFocus: "one_person"
+        currentLocation
       })
     });
 
