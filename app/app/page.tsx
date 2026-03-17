@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AppShell from "@/components/layout/AppShell";
 import SystemMap from "@/components/SystemMap";
 import { useLocalUser } from "@/hooks/useLocalUser";
 import DailyReadPanel from "@/components/dashboard/DailyReadPanel";
 import RelationshipSummary from "@/components/dashboard/RelationshipSummary";
 import ConsoleHero from "@/components/console/ConsoleHero";
+import PlanStatusCard from "@/components/dashboard/PlanStatusCard";
+import OverviewStats from "@/components/dashboard/OverviewStats";
+import RecentReadsCard from "@/components/dashboard/RecentReadsCard";
 
 type Result = {
   gated?: boolean;
@@ -29,6 +32,22 @@ export default function AppPage() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
+  const [overview, setOverview] = useState<any | null>(null);
+
+  useEffect(() => {
+    async function loadOverview() {
+      if (!userId) return;
+
+      const res = await fetch(`/api/v1/dashboard/overview?userId=${encodeURIComponent(userId)}`, {
+        cache: "no-store"
+      });
+
+      const data = await res.json();
+      setOverview(data.overview || null);
+    }
+
+    loadOverview();
+  }, [userId]);
 
   async function run(path: string) {
     setLoading(true);
@@ -56,6 +75,15 @@ export default function AppPage() {
     >
       <div style={{ display: "grid", gap: 24 }}>
         <ConsoleHero />
+
+        {overview ? (
+          <OverviewStats
+            relationshipCount={overview.relationshipCount}
+            participantCount={overview.participantCount}
+            eventCount={overview.eventCount}
+            dailyReadCount={overview.dailyReadCount}
+          />
+        ) : null}
 
         <div className="grid" style={{ gridTemplateColumns: "1.08fr .92fr", gap: 24 }}>
           <div className="input-card">
@@ -110,54 +138,56 @@ export default function AppPage() {
               )}
             </div>
 
-            <div className="result-card">
-              <div className="kicker">Insight</div>
-              {!result ? (
-                <p className="muted">
-                  You will see what may be happening, what pressure looks like, what helps now, and one message option.
-                </p>
-              ) : (
-                <>
-                  <div className="result-block">
-                    <div className="result-title">What may be happening</div>
-                    <div className="result-copy">{result.whatSeemsToBeHappening}</div>
-                  </div>
-
-                  <div className="result-block">
-                    <div className="result-title">Current risk</div>
-                    <div className="result-copy">{result.currentRisk}</div>
-                  </div>
-
-                  <div className="result-block">
-                    <div className="result-title">What helps now</div>
-                    <div className="result-copy">{result.whatToDoNow}</div>
-                  </div>
-
-                  <div className="result-block">
-                    <div className="result-title">Pressure outlook</div>
-                    <div className="result-copy">{result.pressureOutlook}</div>
-                  </div>
-
-                  <div className="result-block">
-                    <div className="result-title">What to avoid</div>
-                    <div className="result-copy">{result.whatToAvoid}</div>
-                  </div>
-
-                  <div className="result-block">
-                    <div className="message-box">
-                      <div className="result-title">Message option</div>
-                      <div className="result-copy">{result.messageYouCanSend}</div>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+            <PlanStatusCard userId={userId} />
           </div>
         </div>
 
         <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: 24 }}>
           <DailyReadPanel userId={userId} />
-          <RelationshipSummary userId={userId} />
+          {overview ? <RecentReadsCard reads={overview.recentReads || []} /> : <RelationshipSummary userId={userId} />}
+        </div>
+
+        <div className="result-card">
+          <div className="kicker">Insight</div>
+          {!result ? (
+            <p className="muted">
+              You will see what may be happening, what pressure looks like, what helps now, and one message option.
+            </p>
+          ) : (
+            <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <div className="result-block">
+                <div className="result-title">What may be happening</div>
+                <div className="result-copy">{result.whatSeemsToBeHappening}</div>
+              </div>
+
+              <div className="result-block">
+                <div className="result-title">Current risk</div>
+                <div className="result-copy">{result.currentRisk}</div>
+              </div>
+
+              <div className="result-block">
+                <div className="result-title">What helps now</div>
+                <div className="result-copy">{result.whatToDoNow}</div>
+              </div>
+
+              <div className="result-block">
+                <div className="result-title">Pressure outlook</div>
+                <div className="result-copy">{result.pressureOutlook}</div>
+              </div>
+
+              <div className="result-block">
+                <div className="result-title">What to avoid</div>
+                <div className="result-copy">{result.whatToAvoid}</div>
+              </div>
+
+              <div className="result-block">
+                <div className="message-box">
+                  <div className="result-title">Message option</div>
+                  <div className="result-copy">{result.messageYouCanSend}</div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </AppShell>
