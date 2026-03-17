@@ -46,6 +46,7 @@ export async function POST(
     const { error: participantError } = await supabase
       .from("relationship_participants")
       .update({
+        display_name: body.fullName || null,
         birth_date: body.birthDate,
         birth_time: body.birthTime || null,
         birth_time_confidence: body.birthTimeConfidence || "unknown",

@@ -1,3 +1,5 @@
+import InviteProfileForm from "@/components/invite/InviteProfileForm";
+
 type InvitePageProps = {
   params: { token: string };
 };
@@ -42,13 +44,9 @@ export default async function InvitePage({ params }: InvitePageProps) {
                   <div className="result-title">Channel</div>
                   <div className="result-copy">{data.invite.channel}</div>
                 </div>
-                <div className="result-block">
-                  <div className="result-title">Next step</div>
-                  <div className="result-copy">
-                    The next sprint will connect this page to the full profile submission form.
-                  </div>
-                </div>
               </div>
+
+              <InviteProfileForm token={params.token} />
             </>
           )}
         </div>
