@@ -1,76 +1,56 @@
-import Link from "next/link";
 import TopNav from "@/components/TopNav";
+import ParallaxGlow from "@/components/motion/ParallaxGlow";
+import HeroStatement from "@/components/marketing/HeroStatement";
+import PremiumFeatureRail from "@/components/marketing/PremiumFeatureRail";
+import Link from "next/link";
 
 export default function HomePage() {
   return (
     <main>
-      <div className="hero">
+      <div className="hero" style={{ position: "relative" }}>
+        <ParallaxGlow />
         <TopNav />
-        <section className="shell hero-grid">
-          <div>
-            <div className="kicker">Defrag</div>
-            <h1>Relational intelligence for complex human systems.</h1>
-            <p>
-              Defrag helps you understand tension, distance, timing, and interpersonal pressure
-              through a premium live console built for ongoing relational clarity.
-            </p>
 
-            <div className="row" style={{ marginTop: 28 }}>
-              <Link href="/app" className="btn btn-primary">Open Console</Link>
-              <Link href="/pricing" className="btn btn-secondary">Pricing</Link>
-              <Link href="/onboarding" className="btn btn-secondary">Create Profile</Link>
-            </div>
-          </div>
+        <section className="shell hero-grid" style={{ position: "relative", zIndex: 1 }}>
+          <HeroStatement />
 
           <div className="hero-card">
             <div style={{ fontWeight: 900, fontSize: 20, marginBottom: 18, letterSpacing: "-0.03em" }}>
-              What Defrag gives you
+              Built for live human systems
             </div>
-
-            <div className="result-block">
-              <div className="result-title">Live relational state</div>
-              <div className="result-copy">
-                A working read on tension, distance, activation, and system pressure.
-              </div>
-            </div>
-
-            <div className="result-block">
-              <div className="result-title">Daily guidance</div>
-              <div className="result-copy">
-                Morning and evening reads shaped by profile, relationship structure, and recent events.
-              </div>
-            </div>
-
-            <div className="result-block">
-              <div className="result-title">Relational system</div>
-              <div className="result-copy">
-                Profiles, participants, invites, timeline, and an evolving live map.
-              </div>
-            </div>
+            <PremiumFeatureRail />
           </div>
         </section>
       </div>
 
       <section className="section">
         <div className="shell">
-          <div className="grid" style={{ gridTemplateColumns: "1.2fr .8fr", gap: 24 }}>
-            <div className="card">
-              <div className="kicker">Premium console</div>
-              <h2 style={{ fontSize: 40, lineHeight: 1.02, letterSpacing: "-0.05em", margin: "0 0 12px" }}>
-                Built for continuity, not one-off advice.
+          <div className="grid" style={{ gridTemplateColumns: "1.15fr .85fr", gap: 24 }}>
+            <div className="card card-dark" style={{ minHeight: 280 }}>
+              <div className="kicker">Why it feels different</div>
+              <h2 style={{ fontSize: 44, lineHeight: 1.02, letterSpacing: "-0.055em", margin: "0 0 12px" }}>
+                Not advice in a vacuum.
+                <br />
+                A live relational operating system.
               </h2>
               <p className="muted" style={{ maxWidth: 760 }}>
-                Defrag is designed as an ongoing relational intelligence system — profile, timeline,
-                participants, daily reads, and live system state all work together.
+                Defrag is designed for continuity. It remembers the structure around you — your profile,
+                your people, your recent events, and the changing pressure inside the system — so its guidance
+                can become more precise over time.
               </p>
             </div>
 
-            <div className="card card-dark">
-              <div className="kicker">Access</div>
-              <div className="price-big" style={{ fontSize: 42 }}>$19<span style={{ fontSize: 18, fontWeight: 700 }}>/mo</span></div>
-              <p className="muted">Free preview available. Defrag Pro unlocks the full system.</p>
-              <div className="actions" style={{ marginTop: 16 }}>
-                <Link href="/pricing" className="btn btn-primary">View pricing</Link>
+            <div className="card" style={{ minHeight: 280, display: "grid", alignContent: "space-between" }}>
+              <div>
+                <div className="kicker">Defrag Pro</div>
+                <div className="price-big" style={{ marginTop: 0 }}>$19<span style={{ fontSize: 18, fontWeight: 700 }}>/mo</span></div>
+                <p className="muted">
+                  Full relational synthesis, live system state, deeper event context, and premium workspace access.
+                </p>
+              </div>
+
+              <div className="actions" style={{ marginTop: 20 }}>
+                <Link href="/pricing" className="btn btn-primary">Start Defrag Pro</Link>
               </div>
             </div>
           </div>
