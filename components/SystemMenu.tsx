@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { getSupabaseBrowser } from "@/lib/supabase/browser";
 
 export default function SystemMenu() {
   const [open, setOpen] = useState(false);
@@ -17,9 +16,7 @@ export default function SystemMenu() {
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
-  async function signOut() {
-    const supabase = getSupabaseBrowser();
-    if (supabase) await supabase.auth.signOut();
+  function signOut() {
     window.location.href = "/";
   }
 
