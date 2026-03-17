@@ -1,5 +1,5 @@
 import "./globals.css";
-import { geist, interTight } from "./fonts";
+import { geist } from "./fonts";
 
 export default function RootLayout({
   children,
@@ -8,7 +8,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${geist.className} ${interTight.variable || ""}`}>
+      <body className={geist.className}>
         {children}
       </body>
     </html>
