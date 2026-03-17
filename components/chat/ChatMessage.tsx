@@ -5,34 +5,32 @@ export default function ChatMessage({ role, data }: any) {
     return (
       <div className="chat-message assistant">
         <div className="chat-bubble">
-
-          <p>{data.summary}</p>
+          <p className="assistant-summary">{data.summary}</p>
 
           <div className="chat-section">
             <strong>From your side</strong>
-            <p>{data.perspectives.you}</p>
+            <p>{data.perspectives?.you || ""}</p>
           </div>
 
           <div className="chat-section">
             <strong>From their side</strong>
-            <p>{data.perspectives.them}</p>
+            <p>{data.perspectives?.them || ""}</p>
           </div>
 
           <div className="chat-section">
             <strong>What this looks like</strong>
-            <p>{data.system}</p>
+            <p>{data.system || ""}</p>
           </div>
 
           <div className="chat-section">
             <strong>What to do next</strong>
-            <p>{data.guidance}</p>
+            <p>{data.guidance || ""}</p>
           </div>
 
           <div className="chat-section">
             <strong>What to avoid</strong>
-            <p>{data.avoid}</p>
+            <p>{data.avoid || ""}</p>
           </div>
-
         </div>
       </div>
     );

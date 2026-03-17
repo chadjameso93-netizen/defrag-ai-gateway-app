@@ -6,10 +6,9 @@ import { usePathname } from "next/navigation";
 import SystemMenu from "@/components/SystemMenu";
 
 const items = [
-  { href: "/app", label: "Console" },
-  { href: "/relationships", label: "Relationships" },
+  { href: "/app", label: "AI" },
+  { href: "/relationships", label: "People" },
   { href: "/timeline", label: "Timeline" },
-  { href: "/pricing", label: "Pricing" },
   { href: "/settings", label: "Settings" }
 ];
 
@@ -52,7 +51,7 @@ export default function AppShell({
 
           <div className="console-sidebar-footer">
             <div className="console-sidebar-note">
-              Clearer reads. Calmer moves.
+              See more clearly. React less.
             </div>
           </div>
         </aside>

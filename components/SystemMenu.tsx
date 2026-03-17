@@ -11,20 +11,15 @@ export default function SystemMenu() {
   useEffect(() => {
     function onClick(e: MouseEvent) {
       if (!ref.current) return;
-      if (!ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
+      if (!ref.current.contains(e.target as Node)) setOpen(false);
     }
-
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
   async function signOut() {
     const supabase = getSupabaseBrowser();
-    if (supabase) {
-      await supabase.auth.signOut();
-    }
+    if (supabase) await supabase.auth.signOut();
     window.location.href = "/";
   }
 
@@ -42,6 +37,8 @@ export default function SystemMenu() {
       {open ? (
         <div className="system-dropdown">
           <Link href="/onboarding" onClick={() => setOpen(false)}>Profile</Link>
+          <Link href="/relationships" onClick={() => setOpen(false)}>Relationships</Link>
+          <Link href="/timeline" onClick={() => setOpen(false)}>Timeline</Link>
           <Link href="/settings" onClick={() => setOpen(false)}>Settings</Link>
           <Link href="/pricing" onClick={() => setOpen(false)}>Plan</Link>
           <button type="button" onClick={signOut}>Log out</button>
