@@ -3,23 +3,10 @@ import { checkEntitlement } from "@/lib/entitlements/checkEntitlement";
 import { analyzeSchema } from "@/lib/validation";
 import { buildCurrentAppContext } from "@/engine/adapters/buildCurrentAppContext";
 import { runDefragEngine } from "@/engine/synthesis/runDefragEngine";
-import { requirePremium } from "@/lib/auth/entitlement";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-
-  const userId = body.userId;
-
-  const entitlement = await checkEntitlement(userId);
-
-  if (!entitlement.active) {
-    return NextResponse.json({
-      gated: true,
-      upgradeUrl: process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "/pricing",
-      message: "Upgrade to Defrag Pro to unlock full relational synthesis."
-    });
-  }
     const parsed = analyzeSchema.safeParse(body);
 
     if (!parsed.success) {
@@ -32,34 +19,24 @@ export async function POST(req: NextRequest) {
     const userId = body.userId || null;
     const text = parsed.data.text;
 
-    const isPremium = userId ? await requirePremium(userId) : false;
+    const entitlement = userId
+      ? await checkEntitlement(userId)
+      : { plan: "free", active: false };
 
-    if (!isPremium) {
+    if (!entitlement.active) {
       return NextResponse.json({
         gated: true,
+        upgradeUrl: process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "/pricing",
         whatSeemsToBeHappening:
-          "This looks like a sensitive relationship moment, and the timing may matter more than force right now.",
-        currentRisk: "Limited preview",
+          "A relational signal is present, but full synthesis is reserved for Defrag Pro.",
+        currentRisk: "Preview only",
         whatToDoNow:
-          "For full relational analysis, timing context, and deeper synthesis, continue in Defrag Pro.",
+          "Upgrade to Defrag Pro to unlock the full relational read, timing context, and deeper guidance.",
         messageYouCanSend:
           "I want to handle this carefully. I’m open to talking when it feels like a better time.",
         whatToAvoid:
-          "Avoid repeated follow-ups, emotionally loaded texts, or trying to resolve everything at once.",
-        pressureOutlook: "Preview only",
-        upgradeUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://defrag-premium.vercel.app"}/pricing`,
-        simpleMap: {
-          people: [
-            { id: "you", label: "You", x: 40, y: 190 },
-            { id: "them", label: "Them", x: 260, y: 60 },
-            { id: "outside", label: "Context", x: 470, y: 190 }
-          ],
-          links: [
-            { from: "you", to: "them", state: "cool" },
-            { from: "outside", to: "them", state: "faded" },
-            { from: "outside", to: "you", state: "faded" }
-          ]
-        }
+          "Avoid stacked follow-ups, reactive texting, and pushing for immediate clarity.",
+        pressureOutlook: "Limited preview"
       });
     }
 
@@ -72,7 +49,8 @@ export async function POST(req: NextRequest) {
       currentRisk: result.pressureLevel,
       whatToDoNow: result.recommendedAction,
       messageYouCanSend: result.messageOption,
-      whatToAvoid: "Avoid long emotional messages, stacked follow-ups, and trying to resolve everything at once.",
+      whatToAvoid:
+        "Avoid long emotional messages, stacked follow-ups, and trying to resolve everything at once.",
       pressureOutlook: result.relationalState,
       simpleMap: {
         people: [
