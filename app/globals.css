@@ -518,3 +518,39 @@ select:focus {
     border-bottom: 1px solid rgba(255,255,255,.08);
   }
 }
+
+.line {
+  transition: all .4s ease;
+}
+
+.line.warm {
+  animation: pulseWarm 2.5s infinite;
+}
+
+.line.cool {
+  animation: pulseCool 3s infinite;
+}
+
+.line.faded {
+  opacity: .4;
+}
+
+@keyframes pulseWarm {
+  0% { opacity: .6; }
+  50% { opacity: 1; }
+  100% { opacity: .6; }
+}
+
+@keyframes pulseCool {
+  0% { opacity: .5; }
+  50% { opacity: .9; }
+  100% { opacity: .5; }
+}
+
+.person {
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.person:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+}

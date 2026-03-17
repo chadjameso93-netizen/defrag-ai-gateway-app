@@ -1,36 +1,44 @@
-type Person = { id: string; label: string; x: number; y: number };
-type Link = { from: string; to: string; state: "warm" | "cool" | "faded" };
+"use client";
 
-export default function SystemMap({
-  people,
-  links
-}: {
-  people: Person[];
-  links: Link[];
-}) {
-  const index = Object.fromEntries(people.map((p) => [p.id, p]));
+export default function SystemMap({ people = [], links = [] }: any) {
   return (
     <div className="map">
-      {links.map((link, i) => {
-        const a = index[link.from];
-        const b = index[link.to];
-        const x1 = a.x + 55;
-        const y1 = a.y + 55;
-        const x2 = b.x + 55;
-        const y2 = b.y + 55;
-        const length = Math.hypot(x2 - x1, y2 - y1);
-        const angle = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
+
+      {links.map((l: any, i: number) => {
+        const from = people.find((p: any) => p.id === l.from);
+        const to = people.find((p: any) => p.id === l.to);
+        if (!from || !to) return null;
+
+        const dx = to.x - from.x;
+        const dy = to.y - from.y;
+        const length = Math.sqrt(dx * dx + dy * dy);
+        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
         return (
           <div
             key={i}
-            className={`line ${link.state}`}
-            style={{ left: x1, top: y1, width: length, transform: `rotate(${angle}deg)` }}
+            className={`line ${l.state}`}
+            style={{
+              left: from.x,
+              top: from.y,
+              width: length,
+              transform: `rotate(${angle}deg)`
+            }}
           />
         );
       })}
-      {people.map((person) => (
-        <div key={person.id} className="person" style={{ left: person.x, top: person.y }}>
-          {person.label}
+
+      {people.map((p: any) => (
+        <div
+          key={p.id}
+          className="person"
+          style={{
+            left: p.x,
+            top: p.y,
+            transform: "translate(-50%, -50%)"
+          }}
+        >
+          {p.label}
         </div>
       ))}
     </div>
