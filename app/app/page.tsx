@@ -15,6 +15,10 @@ import TodaySignalCard from "@/components/dashboard/TodaySignalCard";
 import ProfileRequiredCard from "@/components/empty/ProfileRequiredCard";
 import NoRelationshipsCard from "@/components/empty/NoRelationshipsCard";
 import { isProfileComplete } from "@/lib/profile/isProfileComplete";
+import RelationshipPicker from "@/components/dashboard/RelationshipPicker";
+import SelectedRelationshipState from "@/components/dashboard/SelectedRelationshipState";
+import SaveConsoleEvent from "@/components/events/SaveConsoleEvent";
+import RecentActivityCard from "@/components/dashboard/RecentActivityCard";
 
 type Result = {
   gated?: boolean;
@@ -39,6 +43,7 @@ export default function AppPage() {
   const [result, setResult] = useState<Result | null>(null);
   const [overview, setOverview] = useState<any | null>(null);
   const [profile, setProfile] = useState<any | null>(null);
+  const [relationshipId, setRelationshipId] = useState("");
 
   useEffect(() => {
     async function load() {
@@ -117,6 +122,10 @@ export default function AppPage() {
               Use the console to interpret the moment, test a message, and see the live state update.
             </p>
 
+            <div style={{ marginTop: 18 }}>
+              <RelationshipPicker userId={userId} value={relationshipId} onChange={setRelationshipId} />
+            </div>
+
             <label className="label" style={{ marginTop: 18 }}>Describe the situation</label>
             <textarea
               className="textarea"
@@ -151,6 +160,8 @@ export default function AppPage() {
           </div>
 
           <div style={{ display: "grid", gap: 20 }}>
+            <SelectedRelationshipState relationshipId={relationshipId} />
+
             <div className="result-card">
               <div className="kicker">Live map</div>
               {result?.simpleMap ? (
@@ -164,6 +175,11 @@ export default function AppPage() {
 
             <PlanStatusCard userId={userId} />
           </div>
+        </div>
+
+        <div className="grid console-grid-two">
+          <SaveConsoleEvent relationshipId={relationshipId} notes={text} />
+          <RecentActivityCard userId={userId} />
         </div>
 
         <div className="grid console-grid-two">
