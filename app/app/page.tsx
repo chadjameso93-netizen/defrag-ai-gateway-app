@@ -9,6 +9,7 @@ import ConsoleHero from "@/components/console/ConsoleHero";
 import PlanStatusCard from "@/components/dashboard/PlanStatusCard";
 import OverviewStats from "@/components/dashboard/OverviewStats";
 import RecentReadsCard from "@/components/dashboard/RecentReadsCard";
+import ProfileSummaryCard from "@/components/profile/ProfileSummaryCard";
 
 type Result = {
   gated?: boolean;
@@ -19,7 +20,7 @@ type Result = {
   messageYouCanSend: string;
   whatToAvoid: string;
   pressureOutlook: string;
-  simpleMap: {
+  simpleMap?: {
     people: { id: string; label: string; x: number; y: number }[];
     links: { from: string; to: string; state: "warm" | "cool" | "faded" }[];
   };
@@ -128,7 +129,7 @@ export default function AppPage() {
           <div style={{ display: "grid", gap: 20 }}>
             <div className="result-card">
               <div className="kicker">Live map</div>
-              {result ? (
+              {result?.simpleMap ? (
                 <SystemMap people={result.simpleMap.people} links={result.simpleMap.links} />
               ) : (
                 <div className="map" style={{ display: "grid", placeItems: "center" }}>
@@ -143,50 +144,53 @@ export default function AppPage() {
 
         <div className="grid console-grid-two">
           <DailyReadPanel userId={userId} />
-          {overview ? <RecentReadsCard reads={overview.recentReads || []} /> : null}
+          <RecentReadsCard reads={overview?.recentReads || []} />
         </div>
 
-        <div className="result-card">
-          <div className="kicker">Insight</div>
-          {!result ? (
-            <p className="muted">
-              You will see what may be happening, what pressure looks like, what helps now, and one message option.
-            </p>
-          ) : (
-            <div className="grid console-grid-two" style={{ gap: 16 }}>
-              <div className="result-block">
-                <div className="result-title">What may be happening</div>
-                <div className="result-copy">{result.whatSeemsToBeHappening}</div>
-              </div>
+        <div className="grid console-grid-two">
+          <ProfileSummaryCard userId={userId} />
+          <div className="result-card">
+            <div className="kicker">Insight</div>
+            {!result ? (
+              <p className="muted">
+                You will see what may be happening, what pressure looks like, what helps now, and one message option.
+              </p>
+            ) : (
+              <div className="grid console-grid-two" style={{ gap: 16 }}>
+                <div className="result-block">
+                  <div className="result-title">What may be happening</div>
+                  <div className="result-copy">{result.whatSeemsToBeHappening}</div>
+                </div>
 
-              <div className="result-block">
-                <div className="result-title">Current risk</div>
-                <div className="result-copy">{result.currentRisk}</div>
-              </div>
+                <div className="result-block">
+                  <div className="result-title">Current risk</div>
+                  <div className="result-copy">{result.currentRisk}</div>
+                </div>
 
-              <div className="result-block">
-                <div className="result-title">What helps now</div>
-                <div className="result-copy">{result.whatToDoNow}</div>
-              </div>
+                <div className="result-block">
+                  <div className="result-title">What helps now</div>
+                  <div className="result-copy">{result.whatToDoNow}</div>
+                </div>
 
-              <div className="result-block">
-                <div className="result-title">Pressure outlook</div>
-                <div className="result-copy">{result.pressureOutlook}</div>
-              </div>
+                <div className="result-block">
+                  <div className="result-title">Pressure outlook</div>
+                  <div className="result-copy">{result.pressureOutlook}</div>
+                </div>
 
-              <div className="result-block">
-                <div className="result-title">What to avoid</div>
-                <div className="result-copy">{result.whatToAvoid}</div>
-              </div>
+                <div className="result-block">
+                  <div className="result-title">What to avoid</div>
+                  <div className="result-copy">{result.whatToAvoid}</div>
+                </div>
 
-              <div className="result-block">
-                <div className="message-box">
-                  <div className="result-title">Message option</div>
-                  <div className="result-copy">{result.messageYouCanSend}</div>
+                <div className="result-block">
+                  <div className="message-box">
+                    <div className="result-title">Message option</div>
+                    <div className="result-copy">{result.messageYouCanSend}</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </AppShell>

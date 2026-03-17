@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAppIdentity } from "@/hooks/useAppIdentity";
 import DailyReadAudioPlayer from "@/components/audio/DailyReadAudioPlayer";
 import AppShell from "@/components/layout/AppShell";
+import TimelineFeed from "@/components/timeline/TimelineFeed";
 
 export default function TimelinePage() {
   const { userId } = useAppIdentity();
@@ -28,7 +29,7 @@ export default function TimelinePage() {
   return (
     <AppShell
       title="Timeline"
-      subtitle="Daily reads, timeline state, and timing windows will continue to converge here."
+      subtitle="Daily reads, event history, and future timing windows continue to converge here."
     >
       <div className="grid console-grid-two" style={{ gap: 24 }}>
         <div className="card">
@@ -50,12 +51,7 @@ export default function TimelinePage() {
           )}
         </div>
 
-        <div className="card">
-          <div className="result-title">Next</div>
-          <div className="result-copy" style={{ marginTop: 12 }}>
-            The next sprint will tighten the premium console layout further and deepen live-state rendering.
-          </div>
-        </div>
+        <TimelineFeed userId={userId} />
       </div>
     </AppShell>
   );
