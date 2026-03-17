@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import TopNav from "@/components/TopNav";
+import { useLocalUser } from "@/hooks/useLocalUser";
 
 export default function Pricing() {
   const [loading, setLoading] = useState(false);
+  const userId = useLocalUser();
 
   async function startCheckout() {
     try {
@@ -16,7 +18,7 @@ export default function Pricing() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          userId: "demo-user"
+          userId
         })
       });
 
@@ -40,7 +42,7 @@ export default function Pricing() {
         <div className="kicker">Pricing</div>
         <h1 className="section-title">Choose your pace</h1>
         <p className="muted" style={{ maxWidth: 720 }}>
-          Free is a preview. Defrag Pro unlocks the full relational system, deeper synthesis, and the live product experience.
+          Free is a preview. Defrag Pro unlocks the full relational system, deeper synthesis, and premium product access.
         </p>
 
         <div className="price-grid" style={{ marginTop: 24 }}>
@@ -56,7 +58,7 @@ export default function Pricing() {
             <p style={{ color: "rgba(255,255,255,.78)" }}>
               Full relational synthesis, deeper insight, relationship system, and premium product access.
             </p>
-            <button className="btn btn-primary" style={{ marginTop: 12 }} onClick={startCheckout} disabled={loading}>
+            <button className="btn btn-primary" style={{ marginTop: 12 }} onClick={startCheckout} disabled={loading || !userId}>
               {loading ? "Redirecting..." : "Start Defrag Pro"}
             </button>
             <div className="footer-note" style={{ marginTop: 12 }}>Cancel anytime.</div>

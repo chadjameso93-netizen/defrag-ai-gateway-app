@@ -1,14 +1,54 @@
 "use client";
 
 import { useState } from "react";
+import { useLocalUser } from "@/hooks/useLocalUser";
 
 export default function OnboardingPage() {
+  const userId = useLocalUser();
+
   const [fullName, setFullName] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
   const [birthTimeConfidence, setBirthTimeConfidence] = useState("unknown");
   const [birthPlace, setBirthPlace] = useState("");
   const [currentLocation, setCurrentLocation] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState("");
+
+  async function saveProfile() {
+    setLoading(true);
+    setError("");
+    setDone(false);
+
+    const res = await fetch("/api/v1/profile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userId,
+        fullName,
+        birthDate,
+        birthTime,
+        birthTimeConfidence,
+        birthPlace,
+        currentLocation,
+        onboardingFocus: "one_person"
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(data.error || "Unable to save profile.");
+      setLoading(false);
+      return;
+    }
+
+    setDone(true);
+    setLoading(false);
+  }
 
   return (
     <main className="app-page">
@@ -44,8 +84,13 @@ export default function OnboardingPage() {
           <label className="label" style={{ marginTop: 18 }}>Current location</label>
           <input className="input" value={currentLocation} onChange={(e) => setCurrentLocation(e.target.value)} />
 
+          {error ? <div style={{ marginTop: 14, color: "#fda4af" }}>{error}</div> : null}
+          {done ? <div style={{ marginTop: 14, color: "#86efac" }}>Profile saved.</div> : null}
+
           <div className="actions">
-            <button className="btn btn-primary">Save profile</button>
+            <button className="btn btn-primary" disabled={loading || !userId} onClick={saveProfile}>
+              {loading ? "Saving..." : "Save profile"}
+            </button>
           </div>
         </div>
       </div>
