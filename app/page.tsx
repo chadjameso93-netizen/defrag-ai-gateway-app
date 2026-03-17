@@ -1,7 +1,5 @@
 import TopNav from "@/components/TopNav";
 import Link from "next/link";
-import InsightProofCard from "@/components/marketing/InsightProofCard";
-import BowenProofCard from "@/components/marketing/BowenProofCard";
 
 export default function Page() {
   return (
@@ -9,21 +7,20 @@ export default function Page() {
       <TopNav />
 
       <section className="hero cinematic-hero">
-        <div className="shell cinematic-grid">
-          <div className="hero-copy">
-            <div className="kicker">Relational clarity</div>
+        <div className="shell" style={{ maxWidth: 1100 }}>
+
+          <div style={{ maxWidth: 720 }}>
+            <div className="kicker">Relational Intelligence</div>
 
             <h1 className="cinematic-title">
-              See the system.
+              The next layer of AI
               <br />
-              Lower the pressure.
-              <br />
-              Move with precision.
+              understands relationships.
             </h1>
 
             <p className="cinematic-sub">
-              Defrag is a premium relational intelligence system that shows what is actually happening
-              between you and them — through live AI synthesis, timing, and system-level state.
+              Defrag interprets emotional dynamics, relational systems, and timing signals
+              so you can understand what is actually happening between you and them — before you react.
             </p>
 
             <div className="actions cinematic-actions">
@@ -32,53 +29,76 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="hero-proof-stack">
-            <InsightProofCard />
-            <BowenProofCard />
-          </div>
         </div>
       </section>
 
-      <section className="section editorial-section">
+      <section className="section">
+        <div className="shell" style={{ maxWidth: 900 }}>
+
+          <div className="proof-sequence">
+
+            <div className="proof-line">
+              <span className="proof-label">You think</span>
+              <p>“They’re ignoring me.”</p>
+            </div>
+
+            <div className="proof-line">
+              <span className="proof-label">Defrag sees</span>
+              <p>This is pressure regulation after conflict, not withdrawal.</p>
+            </div>
+
+            <div className="proof-line">
+              <span className="proof-label">So the move is</span>
+              <p>Reduce intensity. One calm message. Then space.</p>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <section className="section">
         <div className="shell editorial-grid">
-          <div className="editorial-copy">
-            <div className="kicker">Why it matters</div>
-            <h2 className="h2-premium">Not advice in a vacuum.</h2>
-            <p className="muted">
-              Defrag builds a living read of pressure, timing, distance, and relational movement,
-              so the next move can be calmer, cleaner, and less likely to make the system heavier.
-            </p>
+
+          <div>
+            <div className="kicker">Why Defrag exists</div>
+            <h2 className="h2-premium">
+              Most AI understands language.
+              <br />
+              It does not understand relationships.
+            </h2>
           </div>
 
-          <div className="editorial-points">
-            <div className="editorial-line">
-              <span>See the hidden dynamic</span>
-              <p>Understand whether the moment is conflict, regulation, distancing, or external pressure entering the system.</p>
-            </div>
-
-            <div className="editorial-line">
-              <span>Choose the next move</span>
-              <p>Get one calmer move and one message option that is less likely to harden the situation further.</p>
-            </div>
+          <div className="muted" style={{ lineHeight: 1.7 }}>
+            Defrag builds a persistent relational model using symbolic profiles,
+            network dynamics, and timing signals. It interprets pressure, perception,
+            and emotional systems so you can respond with clarity instead of reaction.
           </div>
+
         </div>
       </section>
 
       <section className="pricing-band">
         <div className="shell pricing-band-inner">
+
           <div>
             <div className="kicker">Defrag Pro</div>
-            <div className="price-big">$19<span style={{ fontSize: 18, fontWeight: 700 }}>/mo</span></div>
-            <p className="muted" style={{ maxWidth: 620 }}>
-              Full relational synthesis, premium workspace access, timeline depth, daily reads, and live system-state tools.
+            <div className="price-big">$19<span style={{ fontSize: 18 }}>/mo</span></div>
+            <p className="muted">
+              Full relational intelligence system, live state, daily reads,
+              timeline insight, and network-level awareness.
             </p>
           </div>
 
-          <div className="pricing-band-action">
-            <Link href="/pricing" className="btn btn-primary">Start Defrag Pro</Link>
+          <div>
+            <Link href="/pricing" className="btn btn-primary">
+              Start Defrag Pro
+            </Link>
           </div>
+
         </div>
       </section>
+
     </main>
   );
 }
