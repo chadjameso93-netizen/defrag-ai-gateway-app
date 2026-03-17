@@ -15,7 +15,6 @@ import SelectedRelationshipState from "@/components/dashboard/SelectedRelationsh
 import SaveConsoleEvent from "@/components/events/SaveConsoleEvent";
 import RecentActivityCard from "@/components/dashboard/RecentActivityCard";
 import DailyReadPanel from "@/components/dashboard/DailyReadPanel";
-import RecentReadsCard from "@/components/dashboard/RecentReadsCard";
 import ProfileSummaryCard from "@/components/profile/ProfileSummaryCard";
 import QuickActions from "@/components/actions/QuickActions";
 import PlanStatusCard from "@/components/dashboard/PlanStatusCard";
@@ -36,26 +35,26 @@ type Result = {
   };
 };
 
-function InsightPanel({ result }: { result: Result | null }) {
+function AnalysisOutput({ result }: { result: Result | null }) {
   if (!result) {
     return (
-      <div className="card" style={{ minHeight: 520, display: "grid", alignContent: "start" }}>
+      <div className="card card-dark" style={{ minHeight: 540 }}>
         <div className="kicker">Analysis</div>
-        <div style={{ fontSize: 34, fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 1.02 }}>
+        <div style={{ fontSize: 38, fontWeight: 900, letterSpacing: "-0.055em", lineHeight: 1.02, maxWidth: 700 }}>
           The moment, clarified.
         </div>
-        <p className="muted" style={{ marginTop: 12, maxWidth: 720 }}>
-          Run an analysis to see what may actually be happening, where the pressure is, what to avoid, and the next move least likely to make things worse.
+        <p className="muted" style={{ marginTop: 14, maxWidth: 700 }}>
+          Run an analysis to see what may be happening, where the pressure is, what not to force, and the next move least likely to make things worse.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="card card-dark" style={{ minHeight: 520 }}>
+    <div className="card card-dark" style={{ minHeight: 540 }}>
       <div className="kicker">Analysis</div>
 
-      <div className="grid" style={{ gap: 14 }}>
+      <div style={{ display: "grid", gap: 12 }}>
         <div className="message-box">
           <div className="result-title">What may be happening</div>
           <div className="result-copy">{result.whatSeemsToBeHappening}</div>
@@ -155,29 +154,25 @@ export default function AppPage() {
         <ConsoleHero />
 
         {!profileComplete ? <ProfileRequiredCard /> : null}
-
+        {overview ? <TodaySignalCard overview={overview} /> : null}
         {overview ? (
-          <>
-            <TodaySignalCard overview={overview} />
-            <OverviewStats
-              relationshipCount={overview.relationshipCount}
-              participantCount={overview.participantCount}
-              eventCount={overview.eventCount}
-              dailyReadCount={overview.dailyReadCount}
-            />
-          </>
+          <OverviewStats
+            relationshipCount={overview.relationshipCount}
+            participantCount={overview.participantCount}
+            eventCount={overview.eventCount}
+            dailyReadCount={overview.dailyReadCount}
+          />
         ) : null}
-
         {relationshipCount === 0 ? <NoRelationshipsCard /> : null}
 
-        <div className="grid console-grid-two">
-          <div className="input-card" style={{ minHeight: 520 }}>
+        <div className="grid console-grid-two" style={{ alignItems: "start" }}>
+          <div className="input-card" style={{ minHeight: 540 }}>
             <div className="kicker">Console</div>
-            <div style={{ fontSize: 34, fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 1.02 }}>
+            <div style={{ fontSize: 38, fontWeight: 900, letterSpacing: "-0.055em", lineHeight: 1.02 }}>
               Analyze the moment
             </div>
             <p className="muted" style={{ marginTop: 12 }}>
-              Anchor the read to a real relationship, then describe what is happening now.
+              Anchor the read to a real relationship, then describe what is happening right now.
             </p>
 
             <div style={{ marginTop: 20 }}>
@@ -189,7 +184,7 @@ export default function AppPage() {
               className="textarea"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Describe the moment, the silence, the tension, the message, or what changed."
+              placeholder="Describe the silence, the tension, the shift, the message, or what changed."
             />
 
             <div className="actions" style={{ marginTop: 18 }}>
@@ -217,7 +212,7 @@ export default function AppPage() {
             ) : null}
           </div>
 
-          <InsightPanel result={result} />
+          <AnalysisOutput result={result} />
         </div>
 
         <div className="grid console-grid-two">
@@ -245,13 +240,10 @@ export default function AppPage() {
 
         <div className="grid console-grid-two">
           <DailyReadPanel userId={userId} />
-          <RecentReadsCard reads={overview?.recentReads || []} />
+          <ProfileSummaryCard userId={userId} />
         </div>
 
-        <div className="grid console-grid-two">
-          <ProfileSummaryCard userId={userId} />
-          <QuickActions />
-        </div>
+        <QuickActions />
       </div>
     </AppShell>
   );
