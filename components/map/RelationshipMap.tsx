@@ -28,7 +28,7 @@ export default function RelationshipMap({
   }
 
   return (
-    <div className="map" style={{ minHeight: 420 }}>
+    <div className="map" style={{ minHeight: 440, overflow: "hidden" }}>
       {edges.map((edge, i) => {
         const from = nodeById(edge.from);
         const to = nodeById(edge.to);
@@ -57,7 +57,8 @@ export default function RelationshipMap({
               left: from.x + 62,
               top: from.y + 62,
               width: length,
-              transform: `rotate(${angle}deg)`
+              transform: `rotate(${angle}deg)`,
+              opacity: edge.motion === "fade" ? 0.38 : 0.9
             }}
           />
         );
@@ -70,7 +71,10 @@ export default function RelationshipMap({
           style={{
             left: node.x,
             top: node.y,
-            opacity: node.complete ? 1 : 0.7
+            opacity: node.complete ? 1 : 0.72,
+            boxShadow: node.complete
+              ? "0 10px 30px rgba(255,255,255,0.08)"
+              : "0 10px 30px rgba(255,255,255,0.03)"
           }}
         >
           <div>
