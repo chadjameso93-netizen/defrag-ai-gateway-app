@@ -15,28 +15,37 @@ export default function HomePage() {
               through a premium live console built for ongoing relational clarity.
             </p>
 
-            <div className="row" style={{ marginTop: 26 }}>
+            <div className="row" style={{ marginTop: 28 }}>
               <Link href="/app" className="btn btn-primary">Open Console</Link>
               <Link href="/pricing" className="btn btn-secondary">Pricing</Link>
+              <Link href="/onboarding" className="btn btn-secondary">Create Profile</Link>
             </div>
           </div>
 
           <div className="hero-card">
-            <div style={{ fontWeight: 800, fontSize: 18, marginBottom: 14 }}>What Defrag gives you</div>
+            <div style={{ fontWeight: 900, fontSize: 20, marginBottom: 18, letterSpacing: "-0.03em" }}>
+              What Defrag gives you
+            </div>
 
             <div className="result-block">
               <div className="result-title">Live relational state</div>
-              <div className="result-copy">A working read on tension, distance, activation, and system pressure.</div>
+              <div className="result-copy">
+                A working read on tension, distance, activation, and system pressure.
+              </div>
             </div>
 
             <div className="result-block">
               <div className="result-title">Daily guidance</div>
-              <div className="result-copy">Morning and evening reads shaped by profile, relationship structure, and recent events.</div>
+              <div className="result-copy">
+                Morning and evening reads shaped by profile, relationship structure, and recent events.
+              </div>
             </div>
 
             <div className="result-block">
               <div className="result-title">Relational system</div>
-              <div className="result-copy">Profiles, participants, invites, timeline, and an evolving live map.</div>
+              <div className="result-copy">
+                Profiles, participants, invites, timeline, and an evolving live map.
+              </div>
             </div>
           </div>
         </section>
@@ -44,20 +53,25 @@ export default function HomePage() {
 
       <section className="section">
         <div className="shell">
-          <div className="grid" style={{ gridTemplateColumns: "1.3fr .7fr", gap: 24 }}>
+          <div className="grid" style={{ gridTemplateColumns: "1.2fr .8fr", gap: 24 }}>
             <div className="card">
               <div className="kicker">Premium console</div>
-              <h3 style={{ fontSize: 30, marginTop: 0 }}>Built for continuity, not one-off advice.</h3>
+              <h2 style={{ fontSize: 40, lineHeight: 1.02, letterSpacing: "-0.05em", margin: "0 0 12px" }}>
+                Built for continuity, not one-off advice.
+              </h2>
               <p className="muted" style={{ maxWidth: 760 }}>
                 Defrag is designed as an ongoing relational intelligence system — profile, timeline,
                 participants, daily reads, and live system state all work together.
               </p>
             </div>
 
-            <div className="card">
+            <div className="card card-dark">
               <div className="kicker">Access</div>
-              <p className="muted">Free preview</p>
-              <p className="muted">Defrag Pro unlocks the full system</p>
+              <div className="price-big" style={{ fontSize: 42 }}>$19<span style={{ fontSize: 18, fontWeight: 700 }}>/mo</span></div>
+              <p className="muted">Free preview available. Defrag Pro unlocks the full system.</p>
+              <div className="actions" style={{ marginTop: 16 }}>
+                <Link href="/pricing" className="btn btn-primary">View pricing</Link>
+              </div>
             </div>
           </div>
         </div>
