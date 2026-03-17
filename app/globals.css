@@ -527,3 +527,315 @@ input:focus {
     border-bottom: 1px solid rgba(255,255,255,.08);
   }
 }
+
+.mobile-nav-toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.04);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.mobile-nav-toggle span {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: rgba(255,255,255,.92);
+}
+
+.cinematic-hero {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+}
+
+.cinematic-grid {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 42px;
+  align-items: center;
+  padding-top: 84px;
+  padding-bottom: 84px;
+}
+
+.hero-copy {
+  max-width: 760px;
+}
+
+.cinematic-title {
+  margin: 0;
+  font-size: clamp(56px, 8vw, 110px);
+  line-height: .9;
+  letter-spacing: -.075em;
+  font-weight: 900;
+  max-width: 8ch;
+}
+
+.cinematic-sub {
+  margin-top: 20px;
+  max-width: 620px;
+  color: rgba(255,255,255,.68);
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+.cinematic-actions {
+  margin-top: 30px;
+}
+
+.hero-proof-stack {
+  display: grid;
+  gap: 18px;
+  justify-items: end;
+}
+
+.proof-card {
+  width: min(100%, 420px);
+  border-radius: 26px;
+  border: 1px solid rgba(255,255,255,.1);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)),
+    radial-gradient(circle at top right, rgba(120,160,255,.08), transparent 30%);
+  box-shadow: 0 24px 80px rgba(0,0,0,.36);
+  backdrop-filter: blur(20px);
+  padding: 20px;
+}
+
+.insight-proof {
+  animation: driftUpDown 6s ease-in-out infinite;
+}
+
+.bowen-proof {
+  animation: driftUpDown 7.5s ease-in-out infinite;
+}
+
+.proof-kicker {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: rgba(255,255,255,.48);
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.proof-block {
+  padding: 12px 0;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.proof-block:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.proof-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.45);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.proof-copy {
+  color: rgba(255,255,255,.9);
+  line-height: 1.6;
+}
+
+.bowen-map {
+  position: relative;
+  height: 170px;
+  margin-bottom: 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.06);
+  background:
+    radial-gradient(circle at center, rgba(255,255,255,.04), transparent 35%),
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+  overflow: hidden;
+}
+
+.bowen-node {
+  position: absolute;
+  width: 88px;
+  height: 88px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255,255,255,.94);
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.03));
+  box-shadow: 0 10px 26px rgba(0,0,0,.24);
+}
+
+.node-a { left: 36px; top: 70px; }
+.node-b { right: 36px; top: 70px; }
+.node-c { left: 50%; top: 18px; transform: translateX(-50%); }
+
+.bowen-line {
+  position: absolute;
+  height: 2px;
+  border-radius: 999px;
+  transform-origin: left center;
+}
+
+.line-ab {
+  left: 118px;
+  top: 112px;
+  width: 180px;
+}
+
+.line-bc {
+  left: 200px;
+  top: 72px;
+  width: 120px;
+  transform: rotate(-34deg);
+}
+
+.bowen-line.warm {
+  background: linear-gradient(90deg, rgba(255,210,140,.2), rgba(255,190,120,.88), rgba(255,210,140,.2));
+  animation: defragWarmPulse 2.4s ease-in-out infinite;
+}
+
+.bowen-line.cool {
+  background: linear-gradient(90deg, rgba(173,216,255,.2), rgba(173,216,255,.78), rgba(173,216,255,.2));
+  animation: defragCoolPulse 3.2s ease-in-out infinite;
+}
+
+.proof-meta {
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding-top: 14px;
+}
+
+.cinematic-value-section {
+  padding-top: 12px;
+}
+
+.cinematic-value-grid {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 22px;
+}
+
+.value-panel {
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,.08);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025)),
+    radial-gradient(circle at top right, rgba(120,160,255,.06), transparent 30%);
+  padding: 28px;
+}
+
+.value-panel-large {
+  grid-column: 1 / -1;
+}
+
+.pricing-spotlight {
+  padding-top: 12px;
+}
+
+.pricing-spotlight-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,.08);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025)),
+    radial-gradient(circle at right, rgba(255,255,255,.06), transparent 28%);
+  padding: 30px;
+}
+
+@keyframes driftUpDown {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@media (max-width: 980px) {
+  .mobile-nav-toggle {
+    display: inline-flex;
+  }
+
+  .nav {
+    align-items: center;
+  }
+
+  .nav-links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0 4px;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .cinematic-grid,
+  .cinematic-value-grid,
+  .pricing-spotlight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-proof-stack {
+    justify-items: stretch;
+  }
+
+  .proof-card {
+    width: 100%;
+  }
+
+  .cinematic-hero {
+    min-height: auto;
+  }
+
+  .cinematic-title {
+    max-width: 10ch;
+  }
+
+  .pricing-actions {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .shell {
+    width: min(100vw - 24px, 1240px);
+  }
+
+  .cinematic-grid {
+    gap: 28px;
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  .cinematic-title {
+    font-size: clamp(44px, 14vw, 72px);
+    max-width: 9ch;
+  }
+
+  .cinematic-sub {
+    font-size: 17px;
+  }
+
+  .value-panel,
+  .pricing-spotlight-grid,
+  .proof-card {
+    padding: 20px;
+  }
+
+  .node-a { left: 16px; top: 76px; }
+  .node-b { right: 16px; top: 76px; }
+  .line-ab { left: 98px; width: calc(100% - 196px); }
+}
