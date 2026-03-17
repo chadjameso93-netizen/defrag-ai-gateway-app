@@ -8,6 +8,8 @@ import { isProfileComplete } from "@/lib/profile/isProfileComplete";
 import RelationshipPicker from "@/components/dashboard/RelationshipPicker";
 import SelectedRelationshipState from "@/components/dashboard/SelectedRelationshipState";
 import SystemMap from "@/components/SystemMap";
+import SignalStrip from "@/components/analysis/SignalStrip";
+import ExpandableInsight from "@/components/analysis/ExpandableInsight";
 
 type Result = {
   gated?: boolean;
@@ -26,7 +28,7 @@ type Result = {
 
 function ConsoleHeader({
   profileComplete,
-  overview
+  overview,
 }: {
   profileComplete: boolean;
   overview: any;
@@ -67,11 +69,12 @@ function AnalysisSurface({
   setText,
   loading,
   run,
-  result
+  result,
 }: any) {
   return (
     <section className="analysis-surface-minimal">
-      <div className="analysis-surface-head"><SignalStrip />
+      <div className="analysis-surface-head">
+        <SignalStrip />
         <div className="kicker">Live read</div>
         <div className="analysis-surface-title">Read the situation</div>
         <p className="muted">
@@ -80,7 +83,11 @@ function AnalysisSurface({
       </div>
 
       <div className="analysis-form-row">
-        <RelationshipPicker userId={userId} value={relationshipId} onChange={setRelationshipId} />
+        <RelationshipPicker
+          userId={userId}
+          value={relationshipId}
+          onChange={setRelationshipId}
+        />
       </div>
 
       <textarea
@@ -91,10 +98,18 @@ function AnalysisSurface({
       />
 
       <div className="actions" style={{ marginTop: 16 }}>
-        <button className="btn btn-primary" disabled={!text.trim() || loading || !userId} onClick={() => run("/api/analyze")}>
+        <button
+          className="btn btn-primary"
+          disabled={!text.trim() || loading || !userId}
+          onClick={() => run("/api/analyze")}
+        >
           {loading ? "Reading..." : "Read situation"}
         </button>
-        <button className="btn btn-secondary" disabled={!text.trim() || loading || !userId} onClick={() => run("/api/simulate")}>
+        <button
+          className="btn btn-secondary"
+          disabled={!text.trim() || loading || !userId}
+          onClick={() => run("/api/simulate")}
+        >
           Test message
         </button>
       </div>
@@ -107,7 +122,9 @@ function AnalysisSurface({
           </div>
           {result.upgradeUrl ? (
             <div className="actions" style={{ marginTop: 10 }}>
-              <a className="btn btn-primary" href={result.upgradeUrl}>Upgrade</a>
+              <a className="btn btn-primary" href={result.upgradeUrl}>
+                Upgrade
+              </a>
             </div>
           ) : null}
         </div>
@@ -123,30 +140,36 @@ function AnalysisSurface({
           </div>
         ) : (
           <>
-            <div className="analysis-min-line">
-              <span>System read</span>
-              <p><><ExpandableInsight label="System read" summary={result.whatSeemsToBeHappening} detail="Derived from relational pressure patterns, pacing, and system-level dynamics." /></></p>
-            </div>
-            <div className="analysis-min-line">
-              <span>Current risk</span>
-              <p>{result.currentRisk}</p>
-            </div>
-            <div className="analysis-min-line">
-              <span>Next move</span>
-              <p>{result.whatToDoNow}</p>
-            </div>
-            <div className="analysis-min-line">
-              <span>Pressure outlook</span>
-              <p>{result.pressureOutlook}</p>
-            </div>
-            <div className="analysis-min-line">
-              <span>What to avoid</span>
-              <p>{result.whatToAvoid}</p>
-            </div>
-            <div className="analysis-min-line">
-              <span>Message option</span>
-              <p>{result.messageYouCanSend}</p>
-            </div>
+            <ExpandableInsight
+              label="System read"
+              summary={result.whatSeemsToBeHappening}
+              detail="Derived from relational pressure patterns, pacing, and system-level dynamics."
+            />
+            <ExpandableInsight
+              label="Current risk"
+              summary={result.currentRisk}
+              detail="This highlights how likely the moment is to escalate if approached with too much urgency or force."
+            />
+            <ExpandableInsight
+              label="Next move"
+              summary={result.whatToDoNow}
+              detail="A calmer action chosen to reduce pressure rather than intensify the field."
+            />
+            <ExpandableInsight
+              label="Pressure outlook"
+              summary={result.pressureOutlook}
+              detail="A forward-looking read of whether the situation is stabilizing, heating up, or remaining unresolved."
+            />
+            <ExpandableInsight
+              label="What to avoid"
+              summary={result.whatToAvoid}
+              detail="These are the moves most likely to harden tension or trigger misinterpretation."
+            />
+            <ExpandableInsight
+              label="Message option"
+              summary={result.messageYouCanSend}
+              detail="A lower-pressure communication option intended to preserve connection without forcing resolution."
+            />
           </>
         )}
       </div>
@@ -170,11 +193,11 @@ export default function AppPage() {
 
       const [overviewRes, profileRes] = await Promise.all([
         fetch(`/api/v1/dashboard/overview?userId=${encodeURIComponent(userId)}`, {
-          cache: "no-store"
+          cache: "no-store",
         }),
         fetch(`/api/v1/profile/read?userId=${encodeURIComponent(userId)}`, {
-          cache: "no-store"
-        })
+          cache: "no-store",
+        }),
       ]);
 
       const overviewData = await overviewRes.json();
@@ -193,13 +216,13 @@ export default function AppPage() {
     const res = await fetch(path, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         userId,
         relationshipId,
-        text
-      })
+        text,
+      }),
     });
 
     const data = await res.json();
@@ -235,7 +258,10 @@ export default function AppPage() {
             <section className="rail-map-surface">
               <div className="result-title">Live field</div>
               {result?.simpleMap ? (
-                <SystemMap people={result.simpleMap.people} links={result.simpleMap.links} />
+                <SystemMap
+                  people={result.simpleMap.people}
+                  links={result.simpleMap.links}
+                />
               ) : (
                 <div className="map" style={{ display: "grid", placeItems: "center" }}>
                   <div className="muted">Run a read to visualize the field.</div>

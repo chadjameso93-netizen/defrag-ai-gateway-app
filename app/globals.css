@@ -1792,3 +1792,67 @@ h1, .landing-title, .analysis-title {
     grid-template-columns: 1fr !important;
   }
 }
+
+.signal-strip {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.signal-strip span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+  color: rgba(255,255,255,.64);
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+
+.expandable-insight {
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding: 12px 0;
+}
+
+.expandable-insight:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.expandable-head {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.expandable-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.44);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.expandable-summary {
+  margin: 0;
+  color: rgba(255,255,255,.92);
+  line-height: 1.68;
+}
+
+.expandable-detail {
+  margin-top: 10px;
+  color: rgba(255,255,255,.62);
+  line-height: 1.65;
+  padding-left: 2px;
+}
