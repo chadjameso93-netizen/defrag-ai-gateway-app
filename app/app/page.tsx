@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import TopNav from "@/components/TopNav";
+import AppShell from "@/components/layout/AppShell";
 import SystemMap from "@/components/SystemMap";
 import { useLocalUser } from "@/hooks/useLocalUser";
 import DailyReadPanel from "@/components/dashboard/DailyReadPanel";
 import RelationshipSummary from "@/components/dashboard/RelationshipSummary";
+import ConsoleHero from "@/components/console/ConsoleHero";
 
 type Result = {
   gated?: boolean;
@@ -49,15 +50,19 @@ export default function AppPage() {
   }
 
   return (
-    <main className="app-page">
-      <TopNav />
-      <div className="shell" style={{ paddingTop: 28, paddingBottom: 44 }}>
-        <div className="grid" style={{ gridTemplateColumns: "1.1fr .9fr", gap: 24 }}>
+    <AppShell
+      title="Defrag Console"
+      subtitle="A live working surface for relational analysis, timing, daily reads, and premium system state."
+    >
+      <div style={{ display: "grid", gap: 24 }}>
+        <ConsoleHero />
+
+        <div className="grid" style={{ gridTemplateColumns: "1.08fr .92fr", gap: 24 }}>
           <div className="input-card">
-            <div className="kicker">Defrag</div>
-            <h1 className="section-title">Live relational analysis</h1>
+            <div className="kicker">AI</div>
+            <h2 style={{ fontSize: 30, marginTop: 0, marginBottom: 8 }}>Analyze the moment</h2>
             <p className="muted">
-              Defrag uses profile, timing, and relationship context to read the moment and guide the next move.
+              Use the console to interpret the moment, test a message, and see the live state update.
             </p>
 
             <label className="label" style={{ marginTop: 18 }}>Describe the situation</label>
@@ -95,7 +100,7 @@ export default function AppPage() {
 
           <div style={{ display: "grid", gap: 20 }}>
             <div className="result-card">
-              <div className="kicker">Live state</div>
+              <div className="kicker">Live map</div>
               {result ? (
                 <SystemMap people={result.simpleMap.people} links={result.simpleMap.links} />
               ) : (
@@ -150,11 +155,11 @@ export default function AppPage() {
           </div>
         </div>
 
-        <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: 24, marginTop: 24 }}>
+        <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: 24 }}>
           <DailyReadPanel userId={userId} />
           <RelationshipSummary userId={userId} />
         </div>
       </div>
-    </main>
+    </AppShell>
   );
 }
