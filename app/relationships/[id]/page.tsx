@@ -6,6 +6,7 @@ import EventComposer from "@/components/events/EventComposer";
 import InviteComposer from "@/components/invites/InviteComposer";
 import ParticipantComposer from "@/components/participants/ParticipantComposer";
 import LiveStateBadge from "@/components/state/LiveStateBadge";
+import RelationshipMap from "@/components/map/RelationshipMap";
 
 type RelationshipData = {
   relationship: any;
@@ -30,24 +31,28 @@ export default function RelationshipDetailPage({
   const [data, setData] = useState<RelationshipData | null>(null);
   const [events, setEvents] = useState<EventItem[]>([]);
   const [stateData, setStateData] = useState<{ state: string; pressure: number } | null>(null);
+  const [mapData, setMapData] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function load() {
     setLoading(true);
 
-    const [relationshipRes, eventsRes, stateRes] = await Promise.all([
+    const [relationshipRes, eventsRes, stateRes, mapRes] = await Promise.all([
       fetch(`/api/v1/relationships/${params.id}`, { cache: "no-store" }),
       fetch(`/api/v1/events?relationshipId=${encodeURIComponent(params.id)}`, { cache: "no-store" }),
-      fetch(`/api/v1/relationships/state?relationshipId=${encodeURIComponent(params.id)}`, { cache: "no-store" })
+      fetch(`/api/v1/relationships/state?relationshipId=${encodeURIComponent(params.id)}`, { cache: "no-store" }),
+      fetch(`/api/v1/relationships/map?relationshipId=${encodeURIComponent(params.id)}`, { cache: "no-store" })
     ]);
 
     const relationshipData = await relationshipRes.json();
     const eventsData = await eventsRes.json();
     const stateJson = await stateRes.json();
+    const mapJson = await mapRes.json();
 
     setData(relationshipData.ok ? relationshipData : null);
     setEvents(eventsData.events || []);
     setStateData(stateJson.ok ? { state: stateJson.state, pressure: stateJson.pressure } : null);
+    setMapData(mapJson.ok ? mapJson.map : null);
     setLoading(false);
   }
 
@@ -58,7 +63,7 @@ export default function RelationshipDetailPage({
   return (
     <main className="app-page">
       <div className="shell" style={{ paddingTop: 40, paddingBottom: 40 }}>
-        <div className="input-card" style={{ maxWidth: 1180, margin: "0 auto" }}>
+        <div className="input-card" style={{ maxWidth: 1240, margin: "0 auto" }}>
           <div className="kicker">Relationship</div>
           <h1 className="section-title">
             {data?.relationship?.label || "Relationship"}
@@ -70,6 +75,12 @@ export default function RelationshipDetailPage({
           {stateData ? (
             <div style={{ marginTop: 20, maxWidth: 360 }}>
               <LiveStateBadge state={stateData.state} pressure={stateData.pressure} />
+            </div>
+          ) : null}
+
+          {mapData ? (
+            <div style={{ marginTop: 24 }}>
+              <RelationshipMap nodes={mapData.nodes} edges={mapData.edges} />
             </div>
           ) : null}
 
