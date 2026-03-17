@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
 
     const supabase = getSupabaseAdmin();
     const { persistProfileArtifacts } = await import("@/lib/profile/persistProfileArtifacts");
+    const { persistProfileArtifacts } = await import("@/lib/profile/persistProfileArtifacts");
 
     await supabase.from("profiles").upsert({
       user_id: userId,
