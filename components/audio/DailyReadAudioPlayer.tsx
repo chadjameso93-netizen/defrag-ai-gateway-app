@@ -12,10 +12,12 @@ export default function DailyReadAudioPlayer({
   const [audioUrl, setAudioUrl] = useState(initialAudioUrl || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [reason, setReason] = useState("");
 
   async function generateAudio() {
     setLoading(true);
     setError("");
+    setReason("");
 
     const res = await fetch("/api/v1/daily-read/audio", {
       method: "POST",
@@ -37,8 +39,11 @@ export default function DailyReadAudioPlayer({
 
     if (data.audioUrl) {
       setAudioUrl(data.audioUrl);
+      setLoading(false);
+      return;
     }
 
+    setReason(data.reason || "");
     setLoading(false);
   }
 
@@ -55,6 +60,11 @@ export default function DailyReadAudioPlayer({
   return (
     <div style={{ marginTop: 12 }}>
       {error ? <div style={{ color: "#fda4af", marginBottom: 10 }}>{error}</div> : null}
+      {reason === "quota_exceeded" ? (
+        <div style={{ color: "#fbbf24", marginBottom: 10 }}>
+          Audio is temporarily unavailable right now.
+        </div>
+      ) : null}
       <button className="btn btn-secondary" disabled={loading} onClick={generateAudio}>
         {loading ? "Generating audio..." : "Generate audio"}
       </button>
