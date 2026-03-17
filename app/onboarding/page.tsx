@@ -3,7 +3,6 @@
 import { useState } from "react";
 import AppShell from "@/components/layout/AppShell";
 import { useAppIdentity } from "@/hooks/useAppIdentity";
-import OnboardingStepper from "@/components/onboarding/OnboardingStepper";
 
 export default function OnboardingPage() {
   const { userId } = useAppIdentity();
@@ -18,9 +17,7 @@ export default function OnboardingPage() {
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
 
-  const step =
-    done ? 4 :
-    fullName ? birthDate || birthPlace ? 3 : 2 : 1;
+  const step = done ? 4 : !fullName ? 1 : !birthDate && !birthPlace ? 2 : !currentLocation ? 3 : 3;
 
   async function saveProfile() {
     setLoading(true);
@@ -59,18 +56,17 @@ export default function OnboardingPage() {
   return (
     <AppShell
       title="Create your profile"
-      subtitle="A guided setup flow for the profile Defrag uses to build timing context, symbolic depth, and stronger relational precision."
+      subtitle="A guided setup for the symbolic and timing layer Defrag depends on."
     >
-      <div className="grid console-grid-two" style={{ gap: 24 }}>
-        <div
-          style={{
-            border: "1px solid rgba(255,255,255,.08)",
-            background: "rgba(255,255,255,.03)",
-            borderRadius: 28,
-            padding: 24
-          }}
-        >
-          <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+      <div className="onboarding-reset-grid">
+        <section className="onboarding-main-surface">
+          <div className="kicker">Step {step} of 4</div>
+          <h2 className="analysis-surface-title">Build the profile the system reads from.</h2>
+          <p className="muted">
+            The stronger your core data, the stronger the timing layer, daily reads, and relational interpretation become.
+          </p>
+
+          <div className="onboarding-form-grid">
             <div>
               <label className="label">Full name</label>
               <input className="input" value={fullName} onChange={(e) => setFullName(e.target.value)} />
@@ -111,25 +107,21 @@ export default function OnboardingPage() {
           {error ? <div style={{ marginTop: 14, color: "#fda4af" }}>{error}</div> : null}
           {done ? <div style={{ marginTop: 14, color: "#86efac" }}>Profile saved.</div> : null}
 
-          <div className="actions" style={{ marginTop: 20 }}>
+          <div className="actions" style={{ marginTop: 22 }}>
             <button className="btn btn-primary" disabled={loading || !userId} onClick={saveProfile}>
               {loading ? "Saving..." : "Complete profile"}
             </button>
           </div>
-        </div>
+        </section>
 
-        <div className="card card-dark" style={{ minHeight: 360 }}>
-          <div className="kicker">Guided flow</div>
-          <div style={{ fontSize: 30, fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 1.04, marginBottom: 18 }}>
-            Build the symbolic profile the system depends on.
+        <aside className="onboarding-rail">
+          <div className="onboarding-step-list">
+            <div className={`onboarding-step ${step >= 1 ? "active" : ""}`}><span>1</span><strong>Identity</strong></div>
+            <div className={`onboarding-step ${step >= 2 ? "active" : ""}`}><span>2</span><strong>Birth data</strong></div>
+            <div className={`onboarding-step ${step >= 3 ? "active" : ""}`}><span>3</span><strong>Location</strong></div>
+            <div className={`onboarding-step ${step >= 4 ? "active" : ""}`}><span>4</span><strong>Complete</strong></div>
           </div>
-
-          <OnboardingStepper step={step} />
-
-          <p className="muted" style={{ marginTop: 22 }}>
-            The stronger your profile data, the stronger the timing layer, daily reads, and relationship synthesis become.
-          </p>
-        </div>
+        </aside>
       </div>
     </AppShell>
   );

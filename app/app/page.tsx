@@ -7,11 +7,6 @@ import { useSelectedRelationship } from "@/hooks/useSelectedRelationship";
 import { isProfileComplete } from "@/lib/profile/isProfileComplete";
 import RelationshipPicker from "@/components/dashboard/RelationshipPicker";
 import SelectedRelationshipState from "@/components/dashboard/SelectedRelationshipState";
-import SaveConsoleEvent from "@/components/events/SaveConsoleEvent";
-import RecentActivityCard from "@/components/dashboard/RecentActivityCard";
-import DailyReadPanel from "@/components/dashboard/DailyReadPanel";
-import ProfileSummaryCard from "@/components/profile/ProfileSummaryCard";
-import PlanStatusCard from "@/components/dashboard/PlanStatusCard";
 import SystemMap from "@/components/SystemMap";
 
 type Result = {
@@ -29,7 +24,7 @@ type Result = {
   };
 };
 
-function ConsoleTopband({
+function ConsoleHeader({
   profileComplete,
   overview
 }: {
@@ -37,39 +32,27 @@ function ConsoleTopband({
   overview: any;
 }) {
   return (
-    <section className="console-topband">
-      <div className="console-topband-copy">
-        <div className="kicker">Today</div>
-        <h2 className="console-title">
+    <section className="console-header-band">
+      <div>
+        <div className="kicker">Defrag Console</div>
+        <h2 className="console-primary-title">
           {profileComplete
-            ? "Read the field before you add pressure."
-            : "Complete your profile to deepen the read."}
+            ? "Read the relational field before you add pressure."
+            : "Complete your profile to deepen the signal."}
         </h2>
-        <p className="muted">
+        <p className="muted console-primary-copy">
           {profileComplete
-            ? "Anchor to one relationship, interpret the moment, and move with more precision."
-            : "Birth and location data strengthen timing, daily reads, and deeper relational interpretation."}
+            ? "Anchor to one relationship. Interpret the moment. Make one calmer move."
+            : "Natal and location data strengthen timing, daily reads, and the precision of relational interpretation."}
         </p>
       </div>
 
       {overview ? (
-        <div className="console-metrics">
-          <div className="console-metric">
-            <span>Relationships</span>
-            <strong>{overview.relationshipCount || 0}</strong>
-          </div>
-          <div className="console-metric">
-            <span>Participants</span>
-            <strong>{overview.participantCount || 0}</strong>
-          </div>
-          <div className="console-metric">
-            <span>Events</span>
-            <strong>{overview.eventCount || 0}</strong>
-          </div>
-          <div className="console-metric">
-            <span>Reads</span>
-            <strong>{overview.dailyReadCount || 0}</strong>
-          </div>
+        <div className="console-metric-strip">
+          <div><span>Relationships</span><strong>{overview.relationshipCount || 0}</strong></div>
+          <div><span>Participants</span><strong>{overview.participantCount || 0}</strong></div>
+          <div><span>Events</span><strong>{overview.eventCount || 0}</strong></div>
+          <div><span>Reads</span><strong>{overview.dailyReadCount || 0}</strong></div>
         </div>
       ) : null}
     </section>
@@ -87,86 +70,84 @@ function AnalysisSurface({
   result
 }: any) {
   return (
-    <section className="analysis-surface">
-      <div className="analysis-header">
-        <div className="kicker">Console</div>
-        <h2 className="analysis-title">Read the situation</h2>
+    <section className="analysis-surface-minimal">
+      <div className="analysis-surface-head">
+        <div className="kicker">Live read</div>
+        <div className="analysis-surface-title">Read the situation</div>
         <p className="muted">
-          Anchor the read to a real relationship, then describe what is happening now.
+          Describe the signal, the shift, the message, the silence, or what changed.
         </p>
       </div>
 
-      <div style={{ marginTop: 20 }}>
+      <div className="analysis-form-row">
         <RelationshipPicker userId={userId} value={relationshipId} onChange={setRelationshipId} />
       </div>
 
-      <label className="label" style={{ marginTop: 18 }}>Situation</label>
       <textarea
-        className="textarea analysis-textarea"
+        className="textarea analysis-textarea-minimal"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Describe the silence, tension, shift, message, or what changed."
+        placeholder="What is happening right now?"
       />
 
-      <div className="actions" style={{ marginTop: 18 }}>
+      <div className="actions" style={{ marginTop: 16 }}>
         <button className="btn btn-primary" disabled={!text.trim() || loading || !userId} onClick={() => run("/api/analyze")}>
-          {loading ? "Analyzing..." : "Analyze"}
+          {loading ? "Reading..." : "Read situation"}
         </button>
-
         <button className="btn btn-secondary" disabled={!text.trim() || loading || !userId} onClick={() => run("/api/simulate")}>
           Test message
         </button>
       </div>
 
       {result?.gated ? (
-        <div className="analysis-upgrade-note">
+        <div className="console-inline-banner">
           <div className="result-title">Defrag Pro</div>
           <div className="result-copy">
             This is a limited preview. Upgrade to unlock full relational synthesis and premium system access.
           </div>
           {result.upgradeUrl ? (
-            <div className="actions" style={{ marginTop: 12 }}>
+            <div className="actions" style={{ marginTop: 10 }}>
               <a className="btn btn-primary" href={result.upgradeUrl}>Upgrade</a>
             </div>
           ) : null}
         </div>
       ) : null}
 
-      <div className="analysis-readout">
+      <div className="analysis-sequence-minimal">
         {!result ? (
-          <>
-            <div className="result-title">Analysis</div>
-            <div className="analysis-empty">
-              Run an analysis to see what may be happening, where the pressure is, what not to force, and the next move least likely to make the system heavier.
-            </div>
-          </>
+          <div className="analysis-placeholder">
+            <span>System read</span>
+            <p>
+              Defrag interprets relational pressure, pacing, distance, and likely next-move risk so you can respond with more clarity and less force.
+            </p>
+          </div>
         ) : (
-          <div className="analysis-sequence">
-            <div className="analysis-line">
+          <>
+            <div className="analysis-min-line">
               <span>System read</span>
               <p>{result.whatSeemsToBeHappening}</p>
             </div>
-            <div className="analysis-line">
+            <div className="analysis-min-line">
               <span>Current risk</span>
               <p>{result.currentRisk}</p>
             </div>
-            <div className="analysis-line">
+            <div className="analysis-min-line">
               <span>Next move</span>
               <p>{result.whatToDoNow}</p>
             </div>
-            <div className="analysis-line">
+            <div className="analysis-min-line">
               <span>Pressure outlook</span>
               <p>{result.pressureOutlook}</p>
             </div>
-            <div className="analysis-line">
+            <div className="analysis-min-line">
               <span>What to avoid</span>
               <p>{result.whatToAvoid}</p>
             </div>
-            <div className="analysis-line">
+            <div className="analysis-min-line">
               <span>Message option</span>
               <p>{result.messageYouCanSend}</p>
             </div>
-          </div>
+          </>
         )}
       </div>
     </section>
@@ -231,12 +212,12 @@ export default function AppPage() {
   return (
     <AppShell
       title="Defrag Console"
-      subtitle="A premium live workspace for relational analysis, timing, pressure, and system-level clarity."
+      subtitle="A live relational intelligence workspace."
     >
-      <div className="console-root-layout">
-        <ConsoleTopband profileComplete={profileComplete} overview={overview} />
+      <div className="console-reset-layout">
+        <ConsoleHeader profileComplete={profileComplete} overview={overview} />
 
-        <div className="console-main-grid">
+        <div className="console-reset-grid">
           <AnalysisSurface
             userId={userId}
             relationshipId={relationshipId}
@@ -248,29 +229,20 @@ export default function AppPage() {
             result={result}
           />
 
-          <aside className="console-rail">
+          <aside className="console-reset-rail">
             <SelectedRelationshipState relationshipId={relationshipId} />
 
-            <section className="rail-surface">
-              <div className="result-title">Live map</div>
+            <section className="rail-map-surface">
+              <div className="result-title">Live field</div>
               {result?.simpleMap ? (
                 <SystemMap people={result.simpleMap.people} links={result.simpleMap.links} />
               ) : (
                 <div className="map" style={{ display: "grid", placeItems: "center" }}>
-                  <div className="muted">Run an analysis to visualize the relational field.</div>
+                  <div className="muted">Run a read to visualize the field.</div>
                 </div>
               )}
             </section>
-
-            <PlanStatusCard userId={userId} />
           </aside>
-        </div>
-
-        <div className="console-support-strip">
-          <SaveConsoleEvent relationshipId={relationshipId} notes={text} />
-          <RecentActivityCard userId={userId} relationshipId={relationshipId} />
-          <DailyReadPanel userId={userId} />
-          <ProfileSummaryCard userId={userId} />
         </div>
       </div>
     </AppShell>
