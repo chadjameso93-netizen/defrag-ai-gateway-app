@@ -55,15 +55,15 @@ export default function OnboardingPage() {
 
   return (
     <AppShell
-      title="Create your profile"
-      subtitle="A guided setup for the symbolic and timing layer Defrag depends on."
+      title="Profile setup"
+      subtitle="A short setup for the timing and pattern layer Defrag reads from."
     >
       <div className="onboarding-reset-grid">
         <section className="onboarding-main-surface">
           <div className="kicker">Step {step} of 4</div>
-          <h2 className="analysis-surface-title">Build the profile the system reads from.</h2>
+          <h2 className="analysis-surface-title">Build your profile.</h2>
           <p className="muted">
-            The stronger your core data, the stronger the timing layer, daily reads, and relational interpretation become.
+            Better profile details give Defrag a better read.
           </p>
 
           <div className="onboarding-form-grid">
@@ -109,17 +109,17 @@ export default function OnboardingPage() {
 
           <div className="actions" style={{ marginTop: 22 }}>
             <button className="btn btn-primary" disabled={loading || !userId} onClick={saveProfile}>
-              {loading ? "Saving..." : "Complete profile"}
+              {loading ? "Saving..." : "Save profile"}
             </button>
           </div>
         </section>
 
         <aside className="onboarding-rail">
           <div className="onboarding-step-list">
-            <div className={`onboarding-step ${step >= 1 ? "active" : ""}`}><span>1</span><strong>Identity</strong></div>
-            <div className={`onboarding-step ${step >= 2 ? "active" : ""}`}><span>2</span><strong>Birth data</strong></div>
+            <div className={`onboarding-step ${step >= 1 ? "active" : ""}`}><span>1</span><strong>Name</strong></div>
+            <div className={`onboarding-step ${step >= 2 ? "active" : ""}`}><span>2</span><strong>Birth details</strong></div>
             <div className={`onboarding-step ${step >= 3 ? "active" : ""}`}><span>3</span><strong>Location</strong></div>
-            <div className={`onboarding-step ${step >= 4 ? "active" : ""}`}><span>4</span><strong>Complete</strong></div>
+            <div className={`onboarding-step ${step >= 4 ? "active" : ""}`}><span>4</span><strong>Done</strong></div>
           </div>
         </aside>
       </div>

@@ -28,7 +28,7 @@ type Result = {
 
 function ConsoleHeader({
   profileComplete,
-  overview,
+  overview
 }: {
   profileComplete: boolean;
   overview: any;
@@ -36,16 +36,16 @@ function ConsoleHeader({
   return (
     <section className="console-header-band">
       <div>
-        <div className="kicker">Defrag Console</div>
+        <div className="kicker">Today</div>
         <h2 className="console-primary-title">
           {profileComplete
-            ? "Read the relational field before you add pressure."
-            : "Complete your profile to deepen the signal."}
+            ? "Read the situation before you add pressure."
+            : "Finish your profile to get a stronger read."}
         </h2>
         <p className="muted console-primary-copy">
           {profileComplete
-            ? "Anchor to one relationship. Interpret the moment. Make one calmer move."
-            : "Natal and location data strengthen timing, daily reads, and the precision of relational interpretation."}
+            ? "Work from one relationship at a time. Read the moment. Make one calmer move."
+            : "Birth and location details help Defrag make better timing and pattern reads."}
         </p>
       </div>
 
@@ -69,7 +69,7 @@ function AnalysisSurface({
   setText,
   loading,
   run,
-  result,
+  result
 }: any) {
   return (
     <section className="analysis-surface-minimal">
@@ -78,7 +78,7 @@ function AnalysisSurface({
         <div className="kicker">Live read</div>
         <div className="analysis-surface-title">Read the situation</div>
         <p className="muted">
-          Describe the signal, the shift, the message, the silence, or what changed.
+          Describe what changed, what was said, or where the pressure is showing up.
         </p>
       </div>
 
@@ -118,13 +118,11 @@ function AnalysisSurface({
         <div className="console-inline-banner">
           <div className="result-title">Defrag Pro</div>
           <div className="result-copy">
-            This is a limited preview. Upgrade to unlock full relational synthesis and premium system access.
+            This is a limited preview. Upgrade to unlock full reads and the full workspace.
           </div>
           {result.upgradeUrl ? (
             <div className="actions" style={{ marginTop: 10 }}>
-              <a className="btn btn-primary" href={result.upgradeUrl}>
-                Upgrade
-              </a>
+              <a className="btn btn-primary" href={result.upgradeUrl}>Upgrade</a>
             </div>
           ) : null}
         </div>
@@ -135,7 +133,7 @@ function AnalysisSurface({
           <div className="analysis-placeholder">
             <span>System read</span>
             <p>
-              Defrag interprets relational pressure, pacing, distance, and likely next-move risk so you can respond with more clarity and less force.
+              Defrag reads pressure, pacing, distance, and likely next-step risk so you can respond with more clarity and less force.
             </p>
           </div>
         ) : (
@@ -143,32 +141,32 @@ function AnalysisSurface({
             <ExpandableInsight
               label="System read"
               summary={result.whatSeemsToBeHappening}
-              detail="Derived from relational pressure patterns, pacing, and system-level dynamics."
+              detail="Why it thinks that: the pattern looks more like pressure and pacing than a simple yes or no answer."
             />
             <ExpandableInsight
               label="Current risk"
               summary={result.currentRisk}
-              detail="This highlights how likely the moment is to escalate if approached with too much urgency or force."
+              detail="This shows how likely the moment is to get worse if it is pushed too hard."
             />
             <ExpandableInsight
               label="Next move"
               summary={result.whatToDoNow}
-              detail="A calmer action chosen to reduce pressure rather than intensify the field."
+              detail="This is the calmer move that is least likely to raise the pressure."
             />
             <ExpandableInsight
               label="Pressure outlook"
               summary={result.pressureOutlook}
-              detail="A forward-looking read of whether the situation is stabilizing, heating up, or remaining unresolved."
+              detail="This is the likely direction of the situation if nothing changes right away."
             />
             <ExpandableInsight
               label="What to avoid"
               summary={result.whatToAvoid}
-              detail="These are the moves most likely to harden tension or trigger misinterpretation."
+              detail="These are the moves most likely to create more tension or confusion."
             />
             <ExpandableInsight
               label="Message option"
               summary={result.messageYouCanSend}
-              detail="A lower-pressure communication option intended to preserve connection without forcing resolution."
+              detail="This is a lower-pressure way to say something without forcing a result."
             />
           </>
         )}
@@ -193,11 +191,11 @@ export default function AppPage() {
 
       const [overviewRes, profileRes] = await Promise.all([
         fetch(`/api/v1/dashboard/overview?userId=${encodeURIComponent(userId)}`, {
-          cache: "no-store",
+          cache: "no-store"
         }),
         fetch(`/api/v1/profile/read?userId=${encodeURIComponent(userId)}`, {
-          cache: "no-store",
-        }),
+          cache: "no-store"
+        })
       ]);
 
       const overviewData = await overviewRes.json();
@@ -216,13 +214,13 @@ export default function AppPage() {
     const res = await fetch(path, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         userId,
         relationshipId,
-        text,
-      }),
+        text
+      })
     });
 
     const data = await res.json();
@@ -234,8 +232,8 @@ export default function AppPage() {
 
   return (
     <AppShell
-      title="Defrag Console"
-      subtitle="A live relational intelligence workspace."
+      title="Console"
+      subtitle="A live workspace for relationship reads."
     >
       <div className="console-reset-layout">
         <ConsoleHeader profileComplete={profileComplete} overview={overview} />
@@ -264,7 +262,7 @@ export default function AppPage() {
                 />
               ) : (
                 <div className="map" style={{ display: "grid", placeItems: "center" }}>
-                  <div className="muted">Run a read to visualize the field.</div>
+                  <div className="muted">Run a read to see the field.</div>
                 </div>
               )}
             </section>

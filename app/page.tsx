@@ -7,17 +7,17 @@ function LiveProof() {
       <div className="proof-sequence">
         <div className="proof-line">
           <span className="proof-label">You think</span>
-          <p>They’re ignoring me.</p>
+          <p>They are pulling away.</p>
         </div>
 
         <div className="proof-line emphasis">
           <span className="proof-label">Defrag sees</span>
-          <p>This looks more like pressure regulation after conflict than withdrawal.</p>
+          <p>This looks more like pressure after conflict than a clean break.</p>
         </div>
 
         <div className="proof-line">
           <span className="proof-label">So the move is</span>
-          <p>Reduce intensity. One calm message. Then space.</p>
+          <p>Say less. Keep it calm. Give it room.</p>
         </div>
       </div>
     </section>
@@ -28,8 +28,8 @@ function SystemArtifact() {
   return (
     <section className="system-artifact">
       <div className="artifact-header">
-        <div className="kicker">Live relational state</div>
-        <div className="artifact-title">Pressure is entering through the system, not just the conversation.</div>
+        <div className="kicker">Live system view</div>
+        <div className="artifact-title">The pressure is in the system, not just the last message.</div>
       </div>
 
       <div className="artifact-map">
@@ -42,8 +42,7 @@ function SystemArtifact() {
       </div>
 
       <p className="artifact-copy">
-        Defrag interprets the emotional field around a relationship — tension, pacing, distance, and external load —
-        so the next move is based on dynamics, not guesswork.
+        Defrag reads tension, distance, and timing so you can tell the difference between a hard stop and a moment that needs less pressure.
       </p>
     </section>
   );
@@ -61,16 +60,15 @@ export default function Page() {
             <div className="kicker">Relational intelligence</div>
 
             <h1 className="landing-title">
-              AI that understands
+              AI that reads
               <br />
               relationships,
               <br />
-              not just language.
+              not just words.
             </h1>
 
             <p className="landing-sub">
-              Defrag interprets emotional dynamics, timing, and relational pressure so you can
-              understand what is actually happening between you and them before you react.
+              Defrag helps you see what is happening between you and them, why the pressure is rising, and what move is least likely to make it worse.
             </p>
 
             <div className="actions" style={{ marginTop: 28 }}>
@@ -89,18 +87,16 @@ export default function Page() {
       <section className="landing-editorial">
         <div className="shell landing-editorial-grid">
           <div>
-            <div className="kicker">Why Defrag exists</div>
+            <div className="kicker">Why it matters</div>
             <h2 className="landing-editorial-title">
-              Most AI can generate an answer.
+              Most AI can answer a question.
               <br />
-              It cannot interpret a relational system.
+              It cannot read a relationship.
             </h2>
           </div>
 
           <div className="landing-editorial-copy">
-            Defrag builds a persistent relational model using symbolic profiles, network dynamics,
-            timing signals, and a live relational state layer. The result is not generic advice. It is
-            a calmer, more exact read of what is happening inside the human system itself.
+            Defrag looks at pressure, timing, and patterns across a relationship so the next move is based on what is actually going on, not a guess.
           </div>
         </div>
       </section>
@@ -111,7 +107,7 @@ export default function Page() {
             <div className="kicker">Defrag Pro</div>
             <div className="price-big">$19<span style={{ fontSize: 18, fontWeight: 700 }}>/mo</span></div>
             <p className="muted" style={{ maxWidth: 620 }}>
-              Full relational intelligence system, live state, timeline depth, daily reads, and premium workspace access.
+              Full system reads, live state, timeline depth, daily guidance, and the premium workspace.
             </p>
           </div>
 

@@ -1,10 +1,10 @@
 export default function SignalStrip() {
   return (
     <div className="signal-strip">
-      <span>Timing friction ↑</span>
-      <span>Emotional wave active</span>
-      <span>Pressure regulating distance</span>
-      <span>Avoid escalation</span>
+      <span>Timing is tense</span>
+      <span>They may need space</span>
+      <span>Pressure is building</span>
+      <span>Keep it calm</span>
     </div>
   );
 }

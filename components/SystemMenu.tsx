@@ -1,22 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { getSupabaseBrowser } from "@/lib/supabase/browser";
 
 export default function SystemMenu() {
   const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      if (!ref.current) return;
+      if (!ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, []);
+
+  async function signOut() {
+    const supabase = getSupabaseBrowser();
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
+    window.location.href = "/";
+  }
 
   return (
-    <div className="system-menu">
-      <button onClick={() => setOpen(!open)}>•••</button>
+    <div className="system-menu" ref={ref}>
+      <button
+        type="button"
+        className="system-menu-button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Open account menu"
+      >
+        Account
+      </button>
 
-      {open && (
+      {open ? (
         <div className="system-dropdown">
-          <a href="/onboarding">Profile</a>
-          <a href="/settings">Settings</a>
-          <a href="/billing">Billing</a>
-          <a href="/">Logout</a>
+          <Link href="/onboarding" onClick={() => setOpen(false)}>Profile</Link>
+          <Link href="/settings" onClick={() => setOpen(false)}>Settings</Link>
+          <Link href="/pricing" onClick={() => setOpen(false)}>Plan</Link>
+          <button type="button" onClick={signOut}>Log out</button>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
