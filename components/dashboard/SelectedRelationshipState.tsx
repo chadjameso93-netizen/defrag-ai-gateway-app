@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import StatusBadge from "@/components/badges/StatusBadge";
 
@@ -72,6 +73,12 @@ export default function SelectedRelationshipState({
           <StatusBadge label={`${stateData.eventCount || 0} events`} tone="strong" />
         </div>
       ) : null}
+
+      <div className="actions" style={{ marginTop: 16 }}>
+        <Link href={relationship?.id ? `/relationships/${relationship.id}` : "/relationships"} className="btn btn-secondary">
+          Open relationship
+        </Link>
+      </div>
     </div>
   );
 }

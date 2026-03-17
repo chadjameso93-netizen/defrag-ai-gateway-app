@@ -3,7 +3,6 @@
 export default function SystemMap({ people = [], links = [] }: any) {
   return (
     <div className="map">
-
       {links.map((l: any, i: number) => {
         const from = people.find((p: any) => p.id === l.from);
         const to = people.find((p: any) => p.id === l.to);
@@ -38,7 +37,9 @@ export default function SystemMap({ people = [], links = [] }: any) {
             transform: "translate(-50%, -50%)"
           }}
         >
-          {p.label}
+          <div>
+            <div>{p.label}</div>
+          </div>
         </div>
       ))}
     </div>

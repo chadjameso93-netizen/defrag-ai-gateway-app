@@ -554,3 +554,47 @@ select:focus {
 .person:hover {
   transform: translate(-50%, -50%) scale(1.05);
 }
+
+.line {
+  transition: all .35s ease;
+}
+
+.line.warm {
+  animation: defragWarmPulse 2.4s ease-in-out infinite;
+}
+
+.line.cool {
+  animation: defragCoolPulse 3.2s ease-in-out infinite;
+}
+
+.line.faded {
+  opacity: .28;
+  animation: defragFadePulse 4s ease-in-out infinite;
+}
+
+.person {
+  transition: transform .24s ease, box-shadow .24s ease, opacity .24s ease;
+}
+
+.person:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+  box-shadow: 0 16px 40px rgba(255,255,255,.08);
+}
+
+@keyframes defragWarmPulse {
+  0% { opacity: .55; filter: brightness(.95); }
+  50% { opacity: 1; filter: brightness(1.15); }
+  100% { opacity: .55; filter: brightness(.95); }
+}
+
+@keyframes defragCoolPulse {
+  0% { opacity: .45; filter: brightness(.95); }
+  50% { opacity: .9; filter: brightness(1.08); }
+  100% { opacity: .45; filter: brightness(.95); }
+}
+
+@keyframes defragFadePulse {
+  0% { opacity: .18; }
+  50% { opacity: .35; }
+  100% { opacity: .18; }
+}

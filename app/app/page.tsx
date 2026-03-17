@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import AppShell from "@/components/layout/AppShell";
 import SystemMap from "@/components/SystemMap";
 import { useAppIdentity } from "@/hooks/useAppIdentity";
+import { useSelectedRelationship } from "@/hooks/useSelectedRelationship";
 import DailyReadPanel from "@/components/dashboard/DailyReadPanel";
 import ConsoleHero from "@/components/console/ConsoleHero";
 import PlanStatusCard from "@/components/dashboard/PlanStatusCard";
@@ -37,13 +38,13 @@ type Result = {
 
 export default function AppPage() {
   const { userId } = useAppIdentity();
+  const { relationshipId, setRelationshipId } = useSelectedRelationship();
 
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [overview, setOverview] = useState<any | null>(null);
   const [profile, setProfile] = useState<any | null>(null);
-  const [relationshipId, setRelationshipId] = useState("");
 
   useEffect(() => {
     async function load() {
@@ -78,6 +79,7 @@ export default function AppPage() {
       },
       body: JSON.stringify({
         userId,
+        relationshipId,
         text
       })
     });
@@ -179,7 +181,7 @@ export default function AppPage() {
 
         <div className="grid console-grid-two">
           <SaveConsoleEvent relationshipId={relationshipId} notes={text} />
-          <RecentActivityCard userId={userId} />
+          <RecentActivityCard userId={userId} relationshipId={relationshipId} />
         </div>
 
         <div className="grid console-grid-two">
