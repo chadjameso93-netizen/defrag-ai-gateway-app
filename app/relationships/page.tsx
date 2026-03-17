@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useLocalUser } from "@/hooks/useLocalUser";
 import RelationshipComposer from "@/components/relationships/RelationshipComposer";
@@ -55,10 +56,10 @@ export default function RelationshipsPage() {
               ) : (
                 <div style={{ marginTop: 12, display: "grid", gap: 12 }}>
                   {relationships.map((item) => (
-                    <div key={item.id} className="message-box">
+                    <Link key={item.id} href={`/relationships/${item.id}`} className="message-box">
                       <div className="result-title">{item.relationship_type}</div>
                       <div className="result-copy">{item.label}</div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               )}
