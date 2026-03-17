@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import DailyReadAudioPlayer from "@/components/audio/DailyReadAudioPlayer";
 
 export default function DailyReadPanel({ userId }: { userId: string }) {
   const [reads, setReads] = useState<any[]>([]);
@@ -37,6 +38,7 @@ export default function DailyReadPanel({ userId }: { userId: string }) {
             <div key={read.id} className="message-box">
               <div className="result-title">{read.title}</div>
               <div className="result-copy">{read.body_text}</div>
+              <DailyReadAudioPlayer dailyReadId={read.id} initialAudioUrl={read.audio_url} />
             </div>
           ))}
         </div>

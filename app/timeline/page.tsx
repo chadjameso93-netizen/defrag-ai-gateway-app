@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocalUser } from "@/hooks/useLocalUser";
+import DailyReadAudioPlayer from "@/components/audio/DailyReadAudioPlayer";
 
 export default function TimelinePage() {
   const userId = useLocalUser();
@@ -30,7 +31,7 @@ export default function TimelinePage() {
           <div className="kicker">Timeline</div>
           <h1 className="section-title">Daily reads and timeline</h1>
           <p className="muted">
-            This surface will combine relationship events, daily reads, and future timing windows.
+            This surface combines relationship events, daily reads, and future timing windows.
           </p>
 
           <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: 24, marginTop: 24 }}>
@@ -46,6 +47,7 @@ export default function TimelinePage() {
                     <div key={read.id} className="message-box">
                       <div className="result-title">{read.title}</div>
                       <div className="result-copy">{read.body_text}</div>
+                      <DailyReadAudioPlayer dailyReadId={read.id} initialAudioUrl={read.audio_url} />
                     </div>
                   ))}
                 </div>
@@ -55,7 +57,7 @@ export default function TimelinePage() {
             <div className="card">
               <div className="result-title">Next</div>
               <div className="result-copy" style={{ marginTop: 12 }}>
-                The next sprint will add persisted events, AI-extracted timeline markers, and a fuller daily guidance surface.
+                The next sprint will upgrade daily reads from deterministic text to state-aware generation and refine the live system console.
               </div>
             </div>
           </div>
