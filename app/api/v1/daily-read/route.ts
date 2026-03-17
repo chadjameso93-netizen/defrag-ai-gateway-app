@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDailyRead } from "@/lib/daily-read/getDailyRead";
 import { getSupabaseAdmin } from "@/lib/supabase/client";
+import { buildDailyReadContext } from "@/lib/daily-read/buildDailyReadContext";
+import { generateStateAwareDailyRead } from "@/lib/daily-read/generateStateAwareDailyRead";
 
 export async function GET(req: NextRequest) {
   try {
@@ -22,26 +24,31 @@ export async function GET(req: NextRequest) {
     const supabase = getSupabaseAdmin();
     const today = new Date().toISOString().slice(0, 10);
 
-    const seedReads = [
-      {
-        user_id: userId,
-        read_date: today,
-        period: "morning",
-        title: "Morning Read",
-        body_text: "This morning favors a slower pace, less force, and clearer boundaries around emotionally loaded conversations."
-      },
-      {
-        user_id: userId,
-        read_date: today,
-        period: "evening",
-        title: "Evening Read",
-        body_text: "This evening is better for reflection, context, and timing awareness than for pressing a difficult issue too hard."
-      }
-    ];
+    const context = await buildDailyReadContext(userId);
+
+    const morning = generateStateAwareDailyRead(context, "morning");
+    const evening = generateStateAwareDailyRead(context, "evening");
 
     const { data, error } = await supabase
       .from("daily_reads")
-      .insert(seedReads)
+      .insert([
+        {
+          user_id: userId,
+          read_date: today,
+          period: "morning",
+          title: morning.title,
+          body_text: morning.bodyText,
+          audio_url: null
+        },
+        {
+          user_id: userId,
+          read_date: today,
+          period: "evening",
+          title: evening.title,
+          body_text: evening.bodyText,
+          audio_url: null
+        }
+      ])
       .select("*");
 
     if (error) {
