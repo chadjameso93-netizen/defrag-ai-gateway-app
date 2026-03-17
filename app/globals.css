@@ -839,3 +839,209 @@ input:focus {
   .node-b { right: 16px; top: 76px; }
   .line-ab { left: 98px; width: calc(100% - 196px); }
 }
+
+.editorial-section {
+  padding-top: 20px;
+}
+
+.editorial-grid {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.editorial-copy {
+  padding-right: 24px;
+}
+
+.editorial-points {
+  display: grid;
+  gap: 18px;
+}
+
+.editorial-line {
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.editorial-line span {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  color: rgba(255,255,255,.9);
+  margin-bottom: 8px;
+}
+
+.editorial-line p {
+  margin: 0;
+  color: rgba(255,255,255,.62);
+  line-height: 1.6;
+}
+
+.pricing-band {
+  padding: 32px 0 64px;
+}
+
+.pricing-band-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding-top: 28px;
+}
+
+.app-composition {
+  display: grid;
+  gap: 28px;
+}
+
+.app-topband {
+  display: grid;
+  gap: 18px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.app-topband-copy {
+  max-width: 780px;
+}
+
+.compact-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.compact-stat {
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.025);
+}
+
+.compact-stat span {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: rgba(255,255,255,.44);
+  margin-bottom: 8px;
+}
+
+.compact-stat strong {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -.04em;
+  color: rgba(255,255,255,.96);
+}
+
+.app-workgrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) 380px;
+  gap: 24px;
+  align-items: start;
+}
+
+.workspace-main {
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,.09);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025)),
+    radial-gradient(circle at top right, rgba(120,160,255,.05), transparent 28%);
+  padding: 28px;
+  min-height: 100%;
+}
+
+.workspace-title {
+  font-size: clamp(32px, 3vw, 44px);
+  line-height: 1.02;
+  letter-spacing: -.055em;
+  font-weight: 900;
+  margin: 0;
+}
+
+.workspace-textarea {
+  min-height: 220px;
+}
+
+.workspace-inline-note {
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding-top: 18px;
+}
+
+.analysis-output {
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding-top: 20px;
+}
+
+.analysis-empty {
+  color: rgba(255,255,255,.62);
+  line-height: 1.7;
+  max-width: 720px;
+}
+
+.analysis-list {
+  display: grid;
+  gap: 12px;
+}
+
+.analysis-item {
+  padding: 14px 0;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.analysis-item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.analysis-item span {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.44);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.analysis-item p {
+  margin: 0;
+  color: rgba(255,255,255,.92);
+  line-height: 1.65;
+}
+
+.workspace-rail {
+  display: grid;
+  gap: 18px;
+}
+
+.rail-panel {
+  border-radius: 26px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+  padding: 18px;
+}
+
+.app-support-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+@media (max-width: 1100px) {
+  .editorial-grid,
+  .app-workgrid,
+  .app-support-grid,
+  .compact-stats-row,
+  .pricing-band-inner {
+    grid-template-columns: 1fr !important;
+  }
+
+  .workspace-main,
+  .rail-panel {
+    padding: 22px;
+  }
+}

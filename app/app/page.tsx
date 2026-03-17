@@ -5,18 +5,12 @@ import AppShell from "@/components/layout/AppShell";
 import { useAppIdentity } from "@/hooks/useAppIdentity";
 import { useSelectedRelationship } from "@/hooks/useSelectedRelationship";
 import { isProfileComplete } from "@/lib/profile/isProfileComplete";
-import ConsoleHero from "@/components/console/ConsoleHero";
-import TodaySignalCard from "@/components/dashboard/TodaySignalCard";
-import OverviewStats from "@/components/dashboard/OverviewStats";
-import ProfileRequiredCard from "@/components/empty/ProfileRequiredCard";
-import NoRelationshipsCard from "@/components/empty/NoRelationshipsCard";
 import RelationshipPicker from "@/components/dashboard/RelationshipPicker";
 import SelectedRelationshipState from "@/components/dashboard/SelectedRelationshipState";
 import SaveConsoleEvent from "@/components/events/SaveConsoleEvent";
 import RecentActivityCard from "@/components/dashboard/RecentActivityCard";
 import DailyReadPanel from "@/components/dashboard/DailyReadPanel";
 import ProfileSummaryCard from "@/components/profile/ProfileSummaryCard";
-import QuickActions from "@/components/actions/QuickActions";
 import PlanStatusCard from "@/components/dashboard/PlanStatusCard";
 import SystemMap from "@/components/SystemMap";
 
@@ -35,57 +29,132 @@ type Result = {
   };
 };
 
-function AnalysisOutput({ result }: { result: Result | null }) {
-  if (!result) {
-    return (
-      <div className="card card-dark" style={{ minHeight: 540 }}>
-        <div className="kicker">Analysis</div>
-        <div style={{ fontSize: 38, fontWeight: 900, letterSpacing: "-0.055em", lineHeight: 1.02, maxWidth: 700 }}>
-          The moment, clarified.
-        </div>
-        <p className="muted" style={{ marginTop: 14, maxWidth: 700 }}>
-          Run an analysis to see what may be happening, where the pressure is, what not to force, and the next move least likely to make things worse.
-        </p>
-      </div>
-    );
-  }
+function CompactStatusRow({
+  relationshipCount,
+  participantCount,
+  eventCount,
+  dailyReadCount
+}: {
+  relationshipCount: number;
+  participantCount: number;
+  eventCount: number;
+  dailyReadCount: number;
+}) {
+  const items = [
+    { label: "Relationships", value: relationshipCount },
+    { label: "Participants", value: participantCount },
+    { label: "Events", value: eventCount },
+    { label: "Reads", value: dailyReadCount }
+  ];
 
   return (
-    <div className="card card-dark" style={{ minHeight: 540 }}>
-      <div className="kicker">Analysis</div>
-
-      <div style={{ display: "grid", gap: 12 }}>
-        <div className="message-box">
-          <div className="result-title">What may be happening</div>
-          <div className="result-copy">{result.whatSeemsToBeHappening}</div>
+    <div className="compact-stats-row">
+      {items.map((item) => (
+        <div key={item.label} className="compact-stat">
+          <span>{item.label}</span>
+          <strong>{item.value}</strong>
         </div>
+      ))}
+    </div>
+  );
+}
 
-        <div className="message-box">
-          <div className="result-title">Current risk</div>
-          <div className="result-copy">{result.currentRisk}</div>
-        </div>
-
-        <div className="message-box">
-          <div className="result-title">What helps now</div>
-          <div className="result-copy">{result.whatToDoNow}</div>
-        </div>
-
-        <div className="message-box">
-          <div className="result-title">Pressure outlook</div>
-          <div className="result-copy">{result.pressureOutlook}</div>
-        </div>
-
-        <div className="message-box">
-          <div className="result-title">What to avoid</div>
-          <div className="result-copy">{result.whatToAvoid}</div>
-        </div>
-
-        <div className="message-box">
-          <div className="result-title">Message option</div>
-          <div className="result-copy">{result.messageYouCanSend}</div>
+function AnalysisWorkspace({
+  userId,
+  relationshipId,
+  setRelationshipId,
+  text,
+  setText,
+  loading,
+  run,
+  result
+}: any) {
+  return (
+    <section className="workspace-main">
+      <div className="workspace-header">
+        <div>
+          <div className="kicker">Console</div>
+          <h2 className="workspace-title">Analyze the moment</h2>
+          <p className="muted">
+            Anchor the read to a real relationship, then describe what is happening right now.
+          </p>
         </div>
       </div>
-    </div>
+
+      <div style={{ marginTop: 18 }}>
+        <RelationshipPicker userId={userId} value={relationshipId} onChange={setRelationshipId} />
+      </div>
+
+      <label className="label" style={{ marginTop: 18 }}>Situation</label>
+      <textarea
+        className="textarea workspace-textarea"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Describe the silence, the tension, the shift, the message, or what changed."
+      />
+
+      <div className="actions" style={{ marginTop: 18 }}>
+        <button className="btn btn-primary" disabled={!text.trim() || loading || !userId} onClick={() => run("/api/analyze")}>
+          {loading ? "Analyzing..." : "Analyze"}
+        </button>
+
+        <button className="btn btn-secondary" disabled={!text.trim() || loading || !userId} onClick={() => run("/api/simulate")}>
+          Test message
+        </button>
+      </div>
+
+      {result?.gated ? (
+        <div className="workspace-inline-note" style={{ marginTop: 18 }}>
+          <div className="result-title">Defrag Pro</div>
+          <div className="result-copy">
+            This is a limited preview. Upgrade to unlock full relational synthesis and premium system access.
+          </div>
+          {result.upgradeUrl ? (
+            <div className="actions" style={{ marginTop: 12 }}>
+              <a className="btn btn-primary" href={result.upgradeUrl}>Upgrade</a>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="analysis-output" style={{ marginTop: 24 }}>
+        {!result ? (
+          <>
+            <div className="result-title">Analysis</div>
+            <div className="analysis-empty">
+              Run an analysis to see what may be happening, where the pressure is, what not to force, and the next move least likely to make things worse.
+            </div>
+          </>
+        ) : (
+          <div className="analysis-list">
+            <div className="analysis-item">
+              <span>What may be happening</span>
+              <p>{result.whatSeemsToBeHappening}</p>
+            </div>
+            <div className="analysis-item">
+              <span>Current risk</span>
+              <p>{result.currentRisk}</p>
+            </div>
+            <div className="analysis-item">
+              <span>What helps now</span>
+              <p>{result.whatToDoNow}</p>
+            </div>
+            <div className="analysis-item">
+              <span>Pressure outlook</span>
+              <p>{result.pressureOutlook}</p>
+            </div>
+            <div className="analysis-item">
+              <span>What to avoid</span>
+              <p>{result.whatToAvoid}</p>
+            </div>
+            <div className="analysis-item">
+              <span>Message option</span>
+              <p>{result.messageYouCanSend}</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -143,107 +212,74 @@ export default function AppPage() {
   }
 
   const profileComplete = isProfileComplete(profile);
-  const relationshipCount = overview?.relationshipCount || 0;
 
   return (
     <AppShell
       title="Defrag Console"
       subtitle="A premium live workspace for relational analysis, timing, pressure, and system-level clarity."
     >
-      <div style={{ display: "grid", gap: 24 }}>
-        <ConsoleHero />
-
-        {!profileComplete ? <ProfileRequiredCard /> : null}
-        {overview ? <TodaySignalCard overview={overview} /> : null}
-        {overview ? (
-          <OverviewStats
-            relationshipCount={overview.relationshipCount}
-            participantCount={overview.participantCount}
-            eventCount={overview.eventCount}
-            dailyReadCount={overview.dailyReadCount}
-          />
-        ) : null}
-        {relationshipCount === 0 ? <NoRelationshipsCard /> : null}
-
-        <div className="grid console-grid-two" style={{ alignItems: "start" }}>
-          <div className="input-card" style={{ minHeight: 540 }}>
-            <div className="kicker">Console</div>
-            <div style={{ fontSize: 38, fontWeight: 900, letterSpacing: "-0.055em", lineHeight: 1.02 }}>
-              Analyze the moment
-            </div>
-            <p className="muted" style={{ marginTop: 12 }}>
-              Anchor the read to a real relationship, then describe what is happening right now.
+      <div className="app-composition">
+        <div className="app-topband">
+          <div className="app-topband-copy">
+            <div className="kicker">Today</div>
+            <h2 className="workspace-title" style={{ marginBottom: 8 }}>
+              {profileComplete
+                ? "The system is ready for a cleaner read."
+                : "Complete your profile to deepen the signal."}
+            </h2>
+            <p className="muted">
+              {profileComplete
+                ? "Work from one live relationship at a time and capture the movement as it happens."
+                : "Birth and location data strengthen timing, daily reads, and deeper relational synthesis."}
             </p>
+          </div>
 
-            <div style={{ marginTop: 20 }}>
-              <RelationshipPicker userId={userId} value={relationshipId} onChange={setRelationshipId} />
-            </div>
-
-            <label className="label" style={{ marginTop: 18 }}>Situation</label>
-            <textarea
-              className="textarea"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Describe the silence, the tension, the shift, the message, or what changed."
+          {overview ? (
+            <CompactStatusRow
+              relationshipCount={overview.relationshipCount}
+              participantCount={overview.participantCount}
+              eventCount={overview.eventCount}
+              dailyReadCount={overview.dailyReadCount}
             />
+          ) : null}
+        </div>
 
-            <div className="actions" style={{ marginTop: 18 }}>
-              <button className="btn btn-primary" disabled={!text.trim() || loading || !userId} onClick={() => run("/api/analyze")}>
-                {loading ? "Analyzing..." : "Analyze"}
-              </button>
+        <div className="app-workgrid">
+          <AnalysisWorkspace
+            userId={userId}
+            relationshipId={relationshipId}
+            setRelationshipId={setRelationshipId}
+            text={text}
+            setText={setText}
+            loading={loading}
+            run={run}
+            result={result}
+          />
 
-              <button className="btn btn-secondary" disabled={!text.trim() || loading || !userId} onClick={() => run("/api/simulate")}>
-                Test message
-              </button>
+          <aside className="workspace-rail">
+            <SelectedRelationshipState relationshipId={relationshipId} />
+
+            <div className="rail-panel">
+              <div className="result-title">Live map</div>
+              {result?.simpleMap ? (
+                <SystemMap people={result.simpleMap.people} links={result.simpleMap.links} />
+              ) : (
+                <div className="map" style={{ display: "grid", placeItems: "center" }}>
+                  <div className="muted">Run an analysis to visualize the field.</div>
+                </div>
+              )}
             </div>
 
-            {result?.gated ? (
-              <div className="message-box" style={{ marginTop: 18 }}>
-                <div className="result-title">Defrag Pro</div>
-                <div className="result-copy">
-                  This is a limited preview. Upgrade to unlock full relational synthesis, timeline-aware insight, and premium system access.
-                </div>
-                {result.upgradeUrl ? (
-                  <div className="actions" style={{ marginTop: 12 }}>
-                    <a className="btn btn-primary" href={result.upgradeUrl}>Upgrade</a>
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
-
-          <AnalysisOutput result={result} />
-        </div>
-
-        <div className="grid console-grid-two">
-          <div className="card" style={{ minHeight: 420 }}>
-            <div className="kicker">Live map</div>
-            {result?.simpleMap ? (
-              <SystemMap people={result.simpleMap.people} links={result.simpleMap.links} />
-            ) : (
-              <div className="map" style={{ display: "grid", placeItems: "center" }}>
-                <div className="muted">Run an analysis to visualize the current relational field.</div>
-              </div>
-            )}
-          </div>
-
-          <div style={{ display: "grid", gap: 20 }}>
-            <SelectedRelationshipState relationshipId={relationshipId} />
             <PlanStatusCard userId={userId} />
-          </div>
+          </aside>
         </div>
 
-        <div className="grid console-grid-two">
+        <div className="app-support-grid">
           <SaveConsoleEvent relationshipId={relationshipId} notes={text} />
           <RecentActivityCard userId={userId} relationshipId={relationshipId} />
-        </div>
-
-        <div className="grid console-grid-two">
           <DailyReadPanel userId={userId} />
           <ProfileSummaryCard userId={userId} />
         </div>
-
-        <QuickActions />
       </div>
     </AppShell>
   );
