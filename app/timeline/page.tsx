@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useAppIdentity } from "@/hooks/useAppIdentity";
-import DailyReadAudioPlayer from "@/components/audio/DailyReadAudioPlayer";
 import AppShell from "@/components/layout/AppShell";
-import TimelineFeed from "@/components/timeline/TimelineFeed";
 import TimelineSummary from "@/components/timeline/TimelineSummary";
+import TimelineHero from "@/components/timeline/TimelineHero";
+import TimelineReadStack from "@/components/timeline/TimelineReadStack";
+import TimelineEventStack from "@/components/timeline/TimelineEventStack";
 
 export default function TimelinePage() {
   const { userId } = useAppIdentity();
@@ -43,29 +44,22 @@ export default function TimelinePage() {
       title="Timeline"
       subtitle="Daily reads, cross-relationship events, and future timing windows converge here."
     >
-      <TimelineSummary reads={reads} events={events} />
+      <TimelineHero readCount={reads.length} eventCount={events.length} />
+      <div style={{ marginTop: 24 }}>
+        <TimelineSummary reads={reads} events={events} />
+      </div>
 
       <div className="grid console-grid-two" style={{ gap: 24, marginTop: 24 }}>
-        <div className="card">
-          <div className="result-title">Today</div>
-          {loading ? (
-            <div className="result-copy" style={{ marginTop: 12 }}>Loading...</div>
-          ) : reads.length === 0 ? (
-            <div className="result-copy" style={{ marginTop: 12 }}>No reads yet.</div>
-          ) : (
-            <div style={{ marginTop: 12, display: "grid", gap: 12 }}>
-              {reads.map((read) => (
-                <div key={read.id} className="message-box">
-                  <div className="result-title">{read.title}</div>
-                  <div className="result-copy">{read.body_text}</div>
-                  <DailyReadAudioPlayer dailyReadId={read.id} initialAudioUrl={read.audio_url} />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <TimelineFeed userId={userId} />
+        {loading ? (
+          <div className="card">
+            <div className="result-copy">Loading...</div>
+          </div>
+        ) : (
+          <>
+            <TimelineReadStack reads={reads} />
+            <TimelineEventStack events={events} />
+          </>
+        )}
       </div>
     </AppShell>
   );

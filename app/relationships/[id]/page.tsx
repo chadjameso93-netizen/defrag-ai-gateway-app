@@ -12,6 +12,8 @@ import ParticipantCard from "@/components/relationships/ParticipantCard";
 import EventFeedCard from "@/components/relationships/EventFeedCard";
 import RelationshipMetrics from "@/components/relationships/RelationshipMetrics";
 import RelationshipSummaryRail from "@/components/relationships/RelationshipSummaryRail";
+import RelationshipHero from "@/components/relationships/RelationshipHero";
+import OperationalColumn from "@/components/relationships/OperationalColumn";
 
 type RelationshipData = {
   relationship: any;
@@ -70,18 +72,28 @@ export default function RelationshipDetailPage({
       title={data?.relationship?.label || "Relationship"}
       subtitle="Participant state, invites, event history, and live relational pressure all converge here."
     >
+      <RelationshipHero
+        relationship={data?.relationship}
+        state={stateData}
+        participants={data?.participants || []}
+        invites={data?.invites || []}
+        events={events}
+      />
+
       {stateData ? (
-        <div style={{ marginBottom: 18, maxWidth: 420 }}>
+        <div style={{ marginTop: 18, maxWidth: 420 }}>
           <LiveStateBadge state={stateData.state} pressure={stateData.pressure} />
         </div>
       ) : null}
 
-      <RelationshipMetrics
-        participantCount={data?.participants?.length || 0}
-        inviteCount={data?.invites?.length || 0}
-        eventCount={events.length}
-        pressure={stateData?.pressure || 0}
-      />
+      <div style={{ marginTop: 18 }}>
+        <RelationshipMetrics
+          participantCount={data?.participants?.length || 0}
+          inviteCount={data?.invites?.length || 0}
+          eventCount={events.length}
+          pressure={stateData?.pressure || 0}
+        />
+      </div>
 
       {mapData ? (
         <div style={{ marginTop: 24 }}>
@@ -92,10 +104,9 @@ export default function RelationshipDetailPage({
       {loading ? (
         <div className="result-copy" style={{ marginTop: 20 }}>Loading...</div>
       ) : (
-        <div className="grid" style={{ gridTemplateColumns: "1.1fr .9fr", gap: 24, marginTop: 24 }}>
-          <div className="card">
-            <div className="result-title">Participants</div>
-            <div style={{ marginTop: 12, display: "grid", gap: 12 }}>
+        <div className="grid console-grid-two" style={{ marginTop: 24 }}>
+          <div style={{ display: "grid", gap: 20 }}>
+            <OperationalColumn title="Participants">
               {(data?.participants || []).length === 0 ? (
                 <div className="result-copy">No participants yet.</div>
               ) : (
@@ -103,10 +114,9 @@ export default function RelationshipDetailPage({
                   <ParticipantCard key={p.id} participant={p} />
                 ))
               )}
-            </div>
+            </OperationalColumn>
 
-            <div className="result-title" style={{ marginTop: 24 }}>Invites</div>
-            <div style={{ marginTop: 12, display: "grid", gap: 12 }}>
+            <OperationalColumn title="Invites">
               {(data?.invites || []).length === 0 ? (
                 <div className="result-copy">No invites yet.</div>
               ) : (
@@ -117,10 +127,9 @@ export default function RelationshipDetailPage({
                   </div>
                 ))
               )}
-            </div>
+            </OperationalColumn>
 
-            <div className="result-title" style={{ marginTop: 24 }}>Timeline</div>
-            <div style={{ marginTop: 12, display: "grid", gap: 12 }}>
+            <OperationalColumn title="Timeline">
               {events.length === 0 ? (
                 <div className="result-copy">No events yet.</div>
               ) : (
@@ -128,7 +137,7 @@ export default function RelationshipDetailPage({
                   <EventFeedCard key={event.id} event={event} />
                 ))
               )}
-            </div>
+            </OperationalColumn>
           </div>
 
           <div style={{ display: "grid", gap: 20 }}>
