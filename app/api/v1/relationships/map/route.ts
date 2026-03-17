@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/client";
 import { computeRelationshipState } from "@/lib/state/computeRelationshipState";
-import { buildRelationshipMap } from "@/lib/map/buildRelationshipMap";
+import { buildRelationshipSystemMap } from "@/lib/system/buildRelationshipSystemMap";
 
 export async function GET(req: NextRequest) {
   try {
@@ -49,16 +49,18 @@ export async function GET(req: NextRequest) {
       averageIntensity
     });
 
-    const map = buildRelationshipMap({
+    const map = buildRelationshipSystemMap({
       relationshipLabel: relationship.label,
       participants: safeParticipants,
-      liveState: live.state
+      liveState: live.state,
+      includePressureNode: true
     });
 
     return NextResponse.json({
       ok: true,
       map,
-      pressure: live.pressure
+      pressure: live.pressure,
+      state: live.state
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Server error";
