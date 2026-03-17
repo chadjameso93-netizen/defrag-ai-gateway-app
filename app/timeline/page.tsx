@@ -5,33 +5,47 @@ import { useAppIdentity } from "@/hooks/useAppIdentity";
 import DailyReadAudioPlayer from "@/components/audio/DailyReadAudioPlayer";
 import AppShell from "@/components/layout/AppShell";
 import TimelineFeed from "@/components/timeline/TimelineFeed";
+import TimelineSummary from "@/components/timeline/TimelineSummary";
 
 export default function TimelinePage() {
   const { userId } = useAppIdentity();
   const [reads, setReads] = useState<any[]>([]);
+  const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function loadReads() {
+    async function load() {
       if (!userId) return;
       setLoading(true);
-      const res = await fetch(`/api/v1/daily-read?userId=${encodeURIComponent(userId)}`, {
-        cache: "no-store"
-      });
-      const data = await res.json();
-      setReads(data.reads || []);
+
+      const [readsRes, eventsRes] = await Promise.all([
+        fetch(`/api/v1/daily-read?userId=${encodeURIComponent(userId)}`, {
+          cache: "no-store"
+        }),
+        fetch(`/api/v1/timeline?userId=${encodeURIComponent(userId)}`, {
+          cache: "no-store"
+        })
+      ]);
+
+      const readsData = await readsRes.json();
+      const eventsData = await eventsRes.json();
+
+      setReads(readsData.reads || []);
+      setEvents(eventsData.events || []);
       setLoading(false);
     }
 
-    loadReads();
+    load();
   }, [userId]);
 
   return (
     <AppShell
       title="Timeline"
-      subtitle="Daily reads, event history, and future timing windows continue to converge here."
+      subtitle="Daily reads, cross-relationship events, and future timing windows converge here."
     >
-      <div className="grid console-grid-two" style={{ gap: 24 }}>
+      <TimelineSummary reads={reads} events={events} />
+
+      <div className="grid console-grid-two" style={{ gap: 24, marginTop: 24 }}>
         <div className="card">
           <div className="result-title">Today</div>
           {loading ? (
