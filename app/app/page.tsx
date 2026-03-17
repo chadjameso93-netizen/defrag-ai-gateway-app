@@ -29,37 +29,54 @@ type Result = {
   };
 };
 
-function CompactStatusRow({
-  relationshipCount,
-  participantCount,
-  eventCount,
-  dailyReadCount
+function ConsoleTopband({
+  profileComplete,
+  overview
 }: {
-  relationshipCount: number;
-  participantCount: number;
-  eventCount: number;
-  dailyReadCount: number;
+  profileComplete: boolean;
+  overview: any;
 }) {
-  const items = [
-    { label: "Relationships", value: relationshipCount },
-    { label: "Participants", value: participantCount },
-    { label: "Events", value: eventCount },
-    { label: "Reads", value: dailyReadCount }
-  ];
-
   return (
-    <div className="compact-stats-row">
-      {items.map((item) => (
-        <div key={item.label} className="compact-stat">
-          <span>{item.label}</span>
-          <strong>{item.value}</strong>
+    <section className="console-topband">
+      <div className="console-topband-copy">
+        <div className="kicker">Today</div>
+        <h2 className="console-title">
+          {profileComplete
+            ? "Read the field before you add pressure."
+            : "Complete your profile to deepen the read."}
+        </h2>
+        <p className="muted">
+          {profileComplete
+            ? "Anchor to one relationship, interpret the moment, and move with more precision."
+            : "Birth and location data strengthen timing, daily reads, and deeper relational interpretation."}
+        </p>
+      </div>
+
+      {overview ? (
+        <div className="console-metrics">
+          <div className="console-metric">
+            <span>Relationships</span>
+            <strong>{overview.relationshipCount || 0}</strong>
+          </div>
+          <div className="console-metric">
+            <span>Participants</span>
+            <strong>{overview.participantCount || 0}</strong>
+          </div>
+          <div className="console-metric">
+            <span>Events</span>
+            <strong>{overview.eventCount || 0}</strong>
+          </div>
+          <div className="console-metric">
+            <span>Reads</span>
+            <strong>{overview.dailyReadCount || 0}</strong>
+          </div>
         </div>
-      ))}
-    </div>
+      ) : null}
+    </section>
   );
 }
 
-function AnalysisWorkspace({
+function AnalysisSurface({
   userId,
   relationshipId,
   setRelationshipId,
@@ -70,27 +87,25 @@ function AnalysisWorkspace({
   result
 }: any) {
   return (
-    <section className="workspace-main">
-      <div className="workspace-header">
-        <div>
-          <div className="kicker">Console</div>
-          <h2 className="workspace-title">Analyze the moment</h2>
-          <p className="muted">
-            Anchor the read to a real relationship, then describe what is happening right now.
-          </p>
-        </div>
+    <section className="analysis-surface">
+      <div className="analysis-header">
+        <div className="kicker">Console</div>
+        <h2 className="analysis-title">Analyze the moment</h2>
+        <p className="muted">
+          Anchor the read to a real relationship, then describe what is happening now.
+        </p>
       </div>
 
-      <div style={{ marginTop: 18 }}>
+      <div style={{ marginTop: 20 }}>
         <RelationshipPicker userId={userId} value={relationshipId} onChange={setRelationshipId} />
       </div>
 
       <label className="label" style={{ marginTop: 18 }}>Situation</label>
       <textarea
-        className="textarea workspace-textarea"
+        className="textarea analysis-textarea"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Describe the silence, the tension, the shift, the message, or what changed."
+        placeholder="Describe the silence, tension, shift, message, or what changed."
       />
 
       <div className="actions" style={{ marginTop: 18 }}>
@@ -104,7 +119,7 @@ function AnalysisWorkspace({
       </div>
 
       {result?.gated ? (
-        <div className="workspace-inline-note" style={{ marginTop: 18 }}>
+        <div className="analysis-upgrade-note">
           <div className="result-title">Defrag Pro</div>
           <div className="result-copy">
             This is a limited preview. Upgrade to unlock full relational synthesis and premium system access.
@@ -117,37 +132,37 @@ function AnalysisWorkspace({
         </div>
       ) : null}
 
-      <div className="analysis-output" style={{ marginTop: 24 }}>
+      <div className="analysis-readout">
         {!result ? (
           <>
             <div className="result-title">Analysis</div>
             <div className="analysis-empty">
-              Run an analysis to see what may be happening, where the pressure is, what not to force, and the next move least likely to make things worse.
+              Run an analysis to see what may be happening, where the pressure is, what not to force, and the next move least likely to make the system heavier.
             </div>
           </>
         ) : (
-          <div className="analysis-list">
-            <div className="analysis-item">
+          <div className="analysis-sequence">
+            <div className="analysis-line">
               <span>What may be happening</span>
               <p>{result.whatSeemsToBeHappening}</p>
             </div>
-            <div className="analysis-item">
+            <div className="analysis-line">
               <span>Current risk</span>
               <p>{result.currentRisk}</p>
             </div>
-            <div className="analysis-item">
+            <div className="analysis-line">
               <span>What helps now</span>
               <p>{result.whatToDoNow}</p>
             </div>
-            <div className="analysis-item">
+            <div className="analysis-line">
               <span>Pressure outlook</span>
               <p>{result.pressureOutlook}</p>
             </div>
-            <div className="analysis-item">
+            <div className="analysis-line">
               <span>What to avoid</span>
               <p>{result.whatToAvoid}</p>
             </div>
-            <div className="analysis-item">
+            <div className="analysis-line">
               <span>Message option</span>
               <p>{result.messageYouCanSend}</p>
             </div>
@@ -218,34 +233,11 @@ export default function AppPage() {
       title="Defrag Console"
       subtitle="A premium live workspace for relational analysis, timing, pressure, and system-level clarity."
     >
-      <div className="app-composition">
-        <div className="app-topband">
-          <div className="app-topband-copy">
-            <div className="kicker">Today</div>
-            <h2 className="workspace-title" style={{ marginBottom: 8 }}>
-              {profileComplete
-                ? "The system is ready for a cleaner read."
-                : "Complete your profile to deepen the signal."}
-            </h2>
-            <p className="muted">
-              {profileComplete
-                ? "Work from one live relationship at a time and capture the movement as it happens."
-                : "Birth and location data strengthen timing, daily reads, and deeper relational synthesis."}
-            </p>
-          </div>
+      <div className="console-root-layout">
+        <ConsoleTopband profileComplete={profileComplete} overview={overview} />
 
-          {overview ? (
-            <CompactStatusRow
-              relationshipCount={overview.relationshipCount}
-              participantCount={overview.participantCount}
-              eventCount={overview.eventCount}
-              dailyReadCount={overview.dailyReadCount}
-            />
-          ) : null}
-        </div>
-
-        <div className="app-workgrid">
-          <AnalysisWorkspace
+        <div className="console-main-grid">
+          <AnalysisSurface
             userId={userId}
             relationshipId={relationshipId}
             setRelationshipId={setRelationshipId}
@@ -256,25 +248,25 @@ export default function AppPage() {
             result={result}
           />
 
-          <aside className="workspace-rail">
+          <aside className="console-rail">
             <SelectedRelationshipState relationshipId={relationshipId} />
 
-            <div className="rail-panel">
+            <section className="rail-surface">
               <div className="result-title">Live map</div>
               {result?.simpleMap ? (
                 <SystemMap people={result.simpleMap.people} links={result.simpleMap.links} />
               ) : (
                 <div className="map" style={{ display: "grid", placeItems: "center" }}>
-                  <div className="muted">Run an analysis to visualize the field.</div>
+                  <div className="muted">Run an analysis to visualize the relational field.</div>
                 </div>
               )}
-            </div>
+            </section>
 
             <PlanStatusCard userId={userId} />
           </aside>
         </div>
 
-        <div className="app-support-grid">
+        <div className="console-support-strip">
           <SaveConsoleEvent relationshipId={relationshipId} notes={text} />
           <RecentActivityCard userId={userId} relationshipId={relationshipId} />
           <DailyReadPanel userId={userId} />
