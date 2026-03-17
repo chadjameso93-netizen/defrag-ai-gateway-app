@@ -61,7 +61,7 @@ export default function LoginPage() {
           <div className="kicker">Access</div>
           <h2 style={{ fontSize: 32, marginTop: 0, marginBottom: 8 }}>Sign in to Defrag</h2>
           <p className="muted">
-            This page is already wired for Supabase email sign-in and falls back safely when preview mode is still active.
+            This page is wired for Supabase email sign-in and still falls back safely when preview mode is active.
           </p>
 
           <label className="label" style={{ marginTop: 18 }}>Email</label>
