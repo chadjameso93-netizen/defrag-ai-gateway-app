@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import AppShell from "@/components/layout/AppShell";
 import { useAppIdentity } from "@/hooks/useAppIdentity";
 import { useSelectedRelationship } from "@/hooks/useSelectedRelationship";
-import { isProfileComplete } from "@/lib/profile/isProfileComplete";
 import RelationshipPicker from "@/components/dashboard/RelationshipPicker";
 import SelectedRelationshipState from "@/components/dashboard/SelectedRelationshipState";
 import SystemMap from "@/components/SystemMap";
-import SignalStrip from "@/components/analysis/SignalStrip";
-import ExpandableInsight from "@/components/analysis/ExpandableInsight";
+import ChatMessage from "@/components/chat/ChatMessage";
+import InsightDrawer from "@/components/chat/InsightDrawer";
 
 type Result = {
   gated?: boolean;
@@ -26,155 +25,6 @@ type Result = {
   };
 };
 
-function ConsoleHeader({
-  profileComplete,
-  overview
-}: {
-  profileComplete: boolean;
-  overview: any;
-}) {
-  return (
-    <section className="console-header-band">
-      <div>
-        <div className="kicker">Today</div>
-        <h2 className="console-primary-title">
-          {profileComplete
-            ? "Read the situation before you add pressure."
-            : "Finish your profile to get a stronger read."}
-        </h2>
-        <p className="muted console-primary-copy">
-          {profileComplete
-            ? "Work from one relationship at a time. Read the moment. Make one calmer move."
-            : "Birth and location details help Defrag make better timing and pattern reads."}
-        </p>
-      </div>
-
-      {overview ? (
-        <div className="console-metric-strip">
-          <div><span>Relationships</span><strong>{overview.relationshipCount || 0}</strong></div>
-          <div><span>Participants</span><strong>{overview.participantCount || 0}</strong></div>
-          <div><span>Events</span><strong>{overview.eventCount || 0}</strong></div>
-          <div><span>Reads</span><strong>{overview.dailyReadCount || 0}</strong></div>
-        </div>
-      ) : null}
-    </section>
-  );
-}
-
-function AnalysisSurface({
-  userId,
-  relationshipId,
-  setRelationshipId,
-  text,
-  setText,
-  loading,
-  run,
-  result
-}: any) {
-  return (
-    <section className="analysis-surface-minimal">
-      <div className="analysis-surface-head">
-        <SignalStrip />
-        <div className="kicker">Live read</div>
-        <div className="analysis-surface-title">Read the situation</div>
-        <p className="muted">
-          Describe what changed, what was said, or where the pressure is showing up.
-        </p>
-      </div>
-
-      <div className="analysis-form-row">
-        <RelationshipPicker
-          userId={userId}
-          value={relationshipId}
-          onChange={setRelationshipId}
-        />
-      </div>
-
-      <textarea
-        className="textarea analysis-textarea-minimal"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="What is happening right now?"
-      />
-
-      <div className="actions" style={{ marginTop: 16 }}>
-        <button
-          className="btn btn-primary"
-          disabled={!text.trim() || loading || !userId}
-          onClick={() => run("/api/analyze")}
-        >
-          {loading ? "Reading..." : "Read situation"}
-        </button>
-        <button
-          className="btn btn-secondary"
-          disabled={!text.trim() || loading || !userId}
-          onClick={() => run("/api/simulate")}
-        >
-          Test message
-        </button>
-      </div>
-
-      {result?.gated ? (
-        <div className="console-inline-banner">
-          <div className="result-title">Defrag Pro</div>
-          <div className="result-copy">
-            This is a limited preview. Upgrade to unlock full reads and the full workspace.
-          </div>
-          {result.upgradeUrl ? (
-            <div className="actions" style={{ marginTop: 10 }}>
-              <a className="btn btn-primary" href={result.upgradeUrl}>Upgrade</a>
-            </div>
-          ) : null}
-        </div>
-      ) : null}
-
-      <div className="analysis-sequence-minimal">
-        {!result ? (
-          <div className="analysis-placeholder">
-            <span>System read</span>
-            <p>
-              Defrag reads pressure, pacing, distance, and likely next-step risk so you can respond with more clarity and less force.
-            </p>
-          </div>
-        ) : (
-          <>
-            <ExpandableInsight
-              label="System read"
-              summary={result.whatSeemsToBeHappening}
-              detail="Why it thinks that: the pattern looks more like pressure and pacing than a simple yes or no answer."
-            />
-            <ExpandableInsight
-              label="Current risk"
-              summary={result.currentRisk}
-              detail="This shows how likely the moment is to get worse if it is pushed too hard."
-            />
-            <ExpandableInsight
-              label="Next move"
-              summary={result.whatToDoNow}
-              detail="This is the calmer move that is least likely to raise the pressure."
-            />
-            <ExpandableInsight
-              label="Pressure outlook"
-              summary={result.pressureOutlook}
-              detail="This is the likely direction of the situation if nothing changes right away."
-            />
-            <ExpandableInsight
-              label="What to avoid"
-              summary={result.whatToAvoid}
-              detail="These are the moves most likely to create more tension or confusion."
-            />
-            <ExpandableInsight
-              label="Message option"
-              summary={result.messageYouCanSend}
-              detail="This is a lower-pressure way to say something without forcing a result."
-            />
-          </>
-        )}
-      </div>
-    </section>
-  );
-}
-
 export default function AppPage() {
   const { userId } = useAppIdentity();
   const { relationshipId, setRelationshipId } = useSelectedRelationship();
@@ -183,26 +33,18 @@ export default function AppPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [overview, setOverview] = useState<any | null>(null);
-  const [profile, setProfile] = useState<any | null>(null);
 
   useEffect(() => {
     async function load() {
       if (!userId) return;
 
-      const [overviewRes, profileRes] = await Promise.all([
-        fetch(`/api/v1/dashboard/overview?userId=${encodeURIComponent(userId)}`, {
-          cache: "no-store"
-        }),
-        fetch(`/api/v1/profile/read?userId=${encodeURIComponent(userId)}`, {
-          cache: "no-store"
-        })
-      ]);
+      const overviewRes = await fetch(
+        `/api/v1/dashboard/overview?userId=${encodeURIComponent(userId)}`,
+        { cache: "no-store" }
+      );
 
       const overviewData = await overviewRes.json();
-      const profileData = await profileRes.json();
-
       setOverview(overviewData.overview || null);
-      setProfile(profileData.profile || null);
     }
 
     load();
@@ -228,46 +70,150 @@ export default function AppPage() {
     setLoading(false);
   }
 
-  const profileComplete = isProfileComplete(profile);
+  const assistantReply = result
+    ? `${result.whatSeemsToBeHappening} ${result.whatToDoNow}`
+    : "";
 
   return (
     <AppShell
-      title="Console"
-      subtitle="A live workspace for relationship reads."
+      title="Defrag AI"
+      subtitle="A conversational workspace for relationship clarity."
     >
-      <div className="console-reset-layout">
-        <ConsoleHeader profileComplete={profileComplete} overview={overview} />
+      <div className="defrag-chat-layout">
+        <section className="defrag-chat-main">
+          <div className="defrag-chat-header">
+            <div className="kicker">Defrag AI</div>
+            <h2 className="console-primary-title">Talk through what’s happening.</h2>
+            <p className="muted console-primary-copy">
+              Ask naturally. Defrag replies in plain language and shows deeper supporting signals only when you want them.
+            </p>
+          </div>
 
-        <div className="console-reset-grid">
-          <AnalysisSurface
-            userId={userId}
-            relationshipId={relationshipId}
-            setRelationshipId={setRelationshipId}
-            text={text}
-            setText={setText}
-            loading={loading}
-            run={run}
-            result={result}
-          />
+          <div className="chat-thread">
+            {text ? <ChatMessage role="user" content={text} /> : null}
 
-          <aside className="console-reset-rail">
-            <SelectedRelationshipState relationshipId={relationshipId} />
+            {result ? (
+              <>
+                <ChatMessage role="assistant" content={assistantReply} />
 
-            <section className="rail-map-surface">
-              <div className="result-title">Live field</div>
-              {result?.simpleMap ? (
-                <SystemMap
-                  people={result.simpleMap.people}
-                  links={result.simpleMap.links}
-                />
-              ) : (
-                <div className="map" style={{ display: "grid", placeItems: "center" }}>
-                  <div className="muted">Run a read to see the field.</div>
+                <div className="chat-support">
+                  <InsightDrawer
+                    title="Timing"
+                    summary="Why now matters"
+                    detail="This is the timing layer behind the reply. It helps explain whether this is a good moment to reach out, wait, or keep things simple."
+                  />
+                  <InsightDrawer
+                    title="Astrology"
+                    summary="Short signal"
+                    detail="A short timing signal drawn from the symbolic layer. This is supporting context, not something you need to decode."
+                  />
+                  <InsightDrawer
+                    title="Human Design"
+                    summary="Processing style"
+                    detail="A short note about how someone may be processing emotion, space, or communication right now."
+                  />
+                  <InsightDrawer
+                    title="Pattern"
+                    summary="What this resembles"
+                    detail="A simple read on the pattern underneath the moment, such as withdrawal after conflict, mixed signals, or waiting for regulation."
+                  />
+                  <InsightDrawer
+                    title="Relationship dynamic"
+                    summary="What may be driving it"
+                    detail="A plain-language explanation of what may be shaping the interaction between you and this person."
+                  />
                 </div>
-              )}
+              </>
+            ) : (
+              <div className="chat-empty-state">
+                <p>Examples</p>
+                <div className="chat-example-list">
+                  <button type="button" onClick={() => setText("They have been quiet since our last conversation. What may be going on?")}>
+                    They have been quiet since our last conversation. What may be going on?
+                  </button>
+                  <button type="button" onClick={() => setText("I want to send a message, but I do not want to make this worse.")}>
+                    I want to send a message, but I do not want to make this worse.
+                  </button>
+                  <button type="button" onClick={() => setText("Can you help me understand the shift between us this week?")}>
+                    Can you help me understand the shift between us this week?
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="chat-composer">
+            <div style={{ marginBottom: 12 }}>
+              <RelationshipPicker userId={userId} value={relationshipId} onChange={setRelationshipId} />
+            </div>
+
+            <textarea
+              className="textarea chat-textarea"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Message Defrag AI..."
+            />
+
+            <div className="actions" style={{ marginTop: 14 }}>
+              <button
+                className="btn btn-primary"
+                disabled={!text.trim() || loading || !userId}
+                onClick={() => run("/api/analyze")}
+              >
+                {loading ? "Thinking..." : "Send"}
+              </button>
+
+              <button
+                className="btn btn-secondary"
+                disabled={!text.trim() || loading || !userId}
+                onClick={() => run("/api/simulate")}
+              >
+                Test a message
+              </button>
+            </div>
+
+            {result?.gated ? (
+              <div className="console-inline-banner">
+                <div className="result-title">Defrag Pro</div>
+                <div className="result-copy">
+                  This is a limited preview. Upgrade to unlock the full workspace.
+                </div>
+                {result.upgradeUrl ? (
+                  <div className="actions" style={{ marginTop: 10 }}>
+                    <a className="btn btn-primary" href={result.upgradeUrl}>Upgrade</a>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        </section>
+
+        <aside className="defrag-chat-rail">
+          <SelectedRelationshipState relationshipId={relationshipId} />
+
+          <section className="rail-map-surface">
+            <div className="result-title">Live view</div>
+            {result?.simpleMap ? (
+              <SystemMap people={result.simpleMap.people} links={result.simpleMap.links} />
+            ) : (
+              <div className="map" style={{ display: "grid", placeItems: "center" }}>
+                <div className="muted">The live view appears after a reply.</div>
+              </div>
+            )}
+          </section>
+
+          {overview ? (
+            <section className="rail-map-surface">
+              <div className="result-title">Your workspace</div>
+              <div className="console-metric-strip">
+                <div><span>Relationships</span><strong>{overview.relationshipCount || 0}</strong></div>
+                <div><span>Participants</span><strong>{overview.participantCount || 0}</strong></div>
+                <div><span>Events</span><strong>{overview.eventCount || 0}</strong></div>
+                <div><span>Reads</span><strong>{overview.dailyReadCount || 0}</strong></div>
+              </div>
             </section>
-          </aside>
-        </div>
+          ) : null}
+        </aside>
       </div>
     </AppShell>
   );
