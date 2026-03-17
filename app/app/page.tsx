@@ -5,7 +5,6 @@ import AppShell from "@/components/layout/AppShell";
 import SystemMap from "@/components/SystemMap";
 import { useAppIdentity } from "@/hooks/useAppIdentity";
 import DailyReadPanel from "@/components/dashboard/DailyReadPanel";
-import RelationshipSummary from "@/components/dashboard/RelationshipSummary";
 import ConsoleHero from "@/components/console/ConsoleHero";
 import PlanStatusCard from "@/components/dashboard/PlanStatusCard";
 import OverviewStats from "@/components/dashboard/OverviewStats";
@@ -85,7 +84,7 @@ export default function AppPage() {
           />
         ) : null}
 
-        <div className="grid" style={{ gridTemplateColumns: "1.08fr .92fr", gap: 24 }}>
+        <div className="grid console-grid-two">
           <div className="input-card">
             <div className="kicker">AI</div>
             <h2 style={{ fontSize: 30, marginTop: 0, marginBottom: 8 }}>Analyze the moment</h2>
@@ -142,9 +141,9 @@ export default function AppPage() {
           </div>
         </div>
 
-        <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+        <div className="grid console-grid-two">
           <DailyReadPanel userId={userId} />
-          {overview ? <RecentReadsCard reads={overview.recentReads || []} /> : <RelationshipSummary userId={userId} />}
+          {overview ? <RecentReadsCard reads={overview.recentReads || []} /> : null}
         </div>
 
         <div className="result-card">
@@ -154,7 +153,7 @@ export default function AppPage() {
               You will see what may be happening, what pressure looks like, what helps now, and one message option.
             </p>
           ) : (
-            <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div className="grid console-grid-two" style={{ gap: 16 }}>
               <div className="result-block">
                 <div className="result-title">What may be happening</div>
                 <div className="result-copy">{result.whatSeemsToBeHappening}</div>

@@ -30,7 +30,7 @@ export default function TimelinePage() {
       title="Timeline"
       subtitle="Daily reads, timeline state, and timing windows will continue to converge here."
     >
-      <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+      <div className="grid console-grid-two" style={{ gap: 24 }}>
         <div className="card">
           <div className="result-title">Today</div>
           {loading ? (

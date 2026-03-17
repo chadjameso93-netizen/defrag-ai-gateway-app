@@ -91,7 +91,7 @@ export default function RelationshipDetailPage({
       {loading ? (
         <div className="result-copy" style={{ marginTop: 20 }}>Loading...</div>
       ) : (
-        <div className="grid" style={{ gridTemplateColumns: "1.1fr .9fr", gap: 24, marginTop: 24 }}>
+        <div className="grid console-grid-two" style={{ gap: 24, marginTop: 24 }}>
           <div className="card">
             <div className="result-title">Participants</div>
             <div style={{ marginTop: 12, display: "grid", gap: 12 }}>

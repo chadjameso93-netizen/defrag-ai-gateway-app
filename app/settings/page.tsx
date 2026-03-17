@@ -12,7 +12,7 @@ export default function SettingsPage() {
       title="Settings"
       subtitle="Account state, identity mode, and system settings continue to deepen here."
     >
-      <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+      <div className="grid console-grid-two" style={{ gap: 24 }}>
         <AuthModeBanner mode={identity.mode} email={identity.email} />
 
         <div className="card">
