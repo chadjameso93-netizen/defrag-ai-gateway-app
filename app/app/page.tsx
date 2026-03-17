@@ -90,7 +90,7 @@ function AnalysisSurface({
     <section className="analysis-surface">
       <div className="analysis-header">
         <div className="kicker">Console</div>
-        <h2 className="analysis-title">Analyze the moment</h2>
+        <h2 className="analysis-title">Read the situation</h2>
         <p className="muted">
           Anchor the read to a real relationship, then describe what is happening now.
         </p>
@@ -143,7 +143,7 @@ function AnalysisSurface({
         ) : (
           <div className="analysis-sequence">
             <div className="analysis-line">
-              <span>What may be happening</span>
+              <span>System read</span>
               <p>{result.whatSeemsToBeHappening}</p>
             </div>
             <div className="analysis-line">
@@ -151,7 +151,7 @@ function AnalysisSurface({
               <p>{result.currentRisk}</p>
             </div>
             <div className="analysis-line">
-              <span>What helps now</span>
+              <span>Next move</span>
               <p>{result.whatToDoNow}</p>
             </div>
             <div className="analysis-line">

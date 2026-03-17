@@ -1515,3 +1515,70 @@ input:focus {
   .node-right { right: 18px; top: 82px; }
   .line-main { left: 100px; width: calc(100% - 200px); }
 }
+
+body {
+  font-feature-settings: "ss01", "ss02";
+  letter-spacing: -0.01em;
+}
+
+/* HEADLINES = tighter, more cinematic */
+h1, .landing-title, .analysis-title {
+  letter-spacing: -0.06em !important;
+}
+
+/* remove airy SaaS padding */
+.analysis-surface,
+.rail-surface,
+.landing-proof,
+.system-artifact {
+  padding: 20px !important;
+}
+
+/* reduce vertical gaps */
+.analysis-line {
+  padding: 10px 0 !important;
+}
+
+/* tighter buttons */
+.btn {
+  padding: 10px 16px !important;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* subtle light sweep on hover */
+.analysis-surface:hover {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+    radial-gradient(circle at 80% 0%, rgba(120,160,255,.12), transparent 40%);
+  transition: all .6s ease;
+}
+
+/* breathing glow for system */
+.artifact-node {
+  animation: nodePulse 4s ease-in-out infinite;
+}
+
+@keyframes nodePulse {
+  0%,100% { box-shadow: 0 10px 26px rgba(0,0,0,.24); }
+  50% { box-shadow: 0 12px 32px rgba(120,160,255,.25); }
+}
+
+/* remove card spam */
+.rail-surface {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* only primary surface feels elevated */
+.analysis-surface {
+  border: 1px solid rgba(255,255,255,.08);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+}
+
+/* subtle separators instead of boxes */
+.console-rail > * {
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding-top: 16px;
+}
