@@ -1,44 +1,62 @@
-export async function analyzeSituation(input: string) {
-  const text = (input || "").trim();
+import OpenAI from "openai";
 
-  if (!text) {
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY!,
+});
+
+const SYSTEM_PROMPT = `
+You are Defrag AI.
+
+Help the user understand what is happening in a relationship from multiple perspectives.
+
+Always respond with:
+- what this looks like
+- your perspective
+- their perspective
+- what is shaping it
+- what to do next
+- what to avoid
+
+Use simple, grounded language.
+No therapy language. No jargon. No labels.
+Do not mention frameworks.
+
+Keep it calm, clear, and direct.
+`;
+
+export async function analyzeSituation(input: string) {
+  if (!input) {
     return {
-      summary: "There is not enough context yet.",
-      perspectives: {
-        you: "",
-        them: ""
-      },
+      summary: "Add a bit more detail so I can read the situation clearly.",
+      perspectives: { you: "", them: "" },
       system: "",
       guidance: "",
       avoid: ""
     };
   }
 
-  // BASIC HEURISTIC (placeholder until full AI synthesis layer)
-  const softer = /space|time|later|no pressure|whenever/i.test(text);
+  const completion = await client.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: SYSTEM_PROMPT },
+      { role: "user", content: input }
+    ],
+    temperature: 0.7
+  });
+
+  const text = completion.choices[0].message.content || "";
+
+  // LIGHT STRUCTURE PARSE (keeps it flexible but usable)
+  const sections = text.split("\n").filter(Boolean);
 
   return {
-    summary: softer
-      ? "This looks like a situation where keeping things light will help."
-      : "This looks like a moment where the interaction may still be settling.",
-
+    summary: sections[0] || text,
     perspectives: {
-      you: "From your side, this can feel uncertain or unclear.",
-      them: softer
-        ? "From their side, this may feel easier to respond to."
-        : "From their side, they may still be processing or creating space."
+      you: sections[1] || "",
+      them: sections[2] || ""
     },
-
-    system: softer
-      ? "The timing here supports a lower-pressure approach."
-      : "The timing suggests this is not a moment to push for resolution.",
-
-    guidance: softer
-      ? "Keep things simple. One message is enough."
-      : "Give it space. Let the situation settle before reaching again.",
-
-    avoid: softer
-      ? "Avoid adding extra messages right after."
-      : "Avoid pushing for clarity too quickly or sending multiple follow-ups."
+    system: sections[3] || "",
+    guidance: sections[4] || "",
+    avoid: sections[5] || ""
   };
 }
