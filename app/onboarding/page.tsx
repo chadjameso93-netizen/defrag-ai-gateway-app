@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useLocalUser } from "@/hooks/useLocalUser";
+import { useAppIdentity } from "@/hooks/useAppIdentity";
 
 export default function OnboardingPage() {
-  const userId = useLocalUser();
+  const { userId } = useAppIdentity();
 
   const [fullName, setFullName] = useState("");
   const [birthDate, setBirthDate] = useState("");

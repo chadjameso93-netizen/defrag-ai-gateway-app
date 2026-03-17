@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import TopNav from "@/components/TopNav";
-import { useLocalUser } from "@/hooks/useLocalUser";
+import { useAppIdentity } from "@/hooks/useAppIdentity";
 
 export default function Pricing() {
   const [loading, setLoading] = useState(false);
-  const userId = useLocalUser();
+  const { userId } = useAppIdentity();
 
   async function startCheckout() {
     try {

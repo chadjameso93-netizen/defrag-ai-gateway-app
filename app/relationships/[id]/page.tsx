@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import AppShell from "@/components/layout/AppShell";
-import { useLocalUser } from "@/hooks/useLocalUser";
+import { useAppIdentity } from "@/hooks/useAppIdentity";
 import EventComposer from "@/components/events/EventComposer";
 import InviteComposer from "@/components/invites/InviteComposer";
 import ParticipantComposer from "@/components/participants/ParticipantComposer";
@@ -31,7 +31,7 @@ export default function RelationshipDetailPage({
 }: {
   params: { id: string };
 }) {
-  const userId = useLocalUser();
+  const { userId } = useAppIdentity();
   const [data, setData] = useState<RelationshipData | null>(null);
   const [events, setEvents] = useState<EventItem[]>([]);
   const [stateData, setStateData] = useState<{ state: string; pressure: number } | null>(null);

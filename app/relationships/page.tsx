@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useLocalUser } from "@/hooks/useLocalUser";
+import { useAppIdentity } from "@/hooks/useAppIdentity";
 import RelationshipComposer from "@/components/relationships/RelationshipComposer";
 import AppShell from "@/components/layout/AppShell";
 
@@ -14,7 +14,7 @@ type Relationship = {
 };
 
 export default function RelationshipsPage() {
-  const userId = useLocalUser();
+  const { userId } = useAppIdentity();
   const [relationships, setRelationships] = useState<Relationship[]>([]);
   const [loading, setLoading] = useState(false);
 

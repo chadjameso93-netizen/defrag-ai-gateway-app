@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLocalUser } from "@/hooks/useLocalUser";
+import { useAppIdentity } from "@/hooks/useAppIdentity";
 import DailyReadAudioPlayer from "@/components/audio/DailyReadAudioPlayer";
 import AppShell from "@/components/layout/AppShell";
 
 export default function TimelinePage() {
-  const userId = useLocalUser();
+  const { userId } = useAppIdentity();
   const [reads, setReads] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 

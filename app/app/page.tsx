@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import AppShell from "@/components/layout/AppShell";
 import SystemMap from "@/components/SystemMap";
-import { useLocalUser } from "@/hooks/useLocalUser";
+import { useAppIdentity } from "@/hooks/useAppIdentity";
 import DailyReadPanel from "@/components/dashboard/DailyReadPanel";
 import RelationshipSummary from "@/components/dashboard/RelationshipSummary";
 import ConsoleHero from "@/components/console/ConsoleHero";
@@ -27,7 +27,7 @@ type Result = {
 };
 
 export default function AppPage() {
-  const userId = useLocalUser();
+  const { userId } = useAppIdentity();
 
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
