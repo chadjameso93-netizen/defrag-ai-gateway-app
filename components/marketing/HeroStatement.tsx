@@ -4,22 +4,23 @@ import Link from "next/link";
 
 export default function HeroStatement() {
   return (
-    <div style={{ position: "relative", zIndex: 2 }}>
+    <div className="float-soft">
       <div className="kicker">Defrag</div>
-      <h1 style={{ margin: "8px 0 18px" }}>
-        See the relational system.
+
+      <div className="h1-premium">
+        See what’s actually happening
         <br />
-        Move with precision.
-      </h1>
-      <p>
-        Defrag turns tension, distance, timing, and interpersonal pressure into a live premium workspace —
-        so you can understand what is actually happening, what not to force, and what to do next.
+        between you and them.
+      </div>
+
+      <p className="text-muted" style={{ maxWidth: 560, marginTop: 18 }}>
+        Not advice. Not guesswork.
+        A live relational system that shows tension, timing, and what will actually move things forward.
       </p>
 
-      <div className="row" style={{ marginTop: 30 }}>
-        <Link href="/app" className="btn btn-primary">Open Console</Link>
-        <Link href="/onboarding" className="btn btn-secondary">Start your profile</Link>
-        <Link href="/pricing" className="btn btn-secondary">View pricing</Link>
+      <div style={{ marginTop: 28, display: "flex", gap: 12 }}>
+        <Link href="/app" className="btn-premium">Open Defrag</Link>
+        <Link href="/onboarding" className="btn btn-secondary">Start profile</Link>
       </div>
     </div>
   );
