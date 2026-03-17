@@ -12,6 +12,9 @@ import RecentReadsCard from "@/components/dashboard/RecentReadsCard";
 import ProfileSummaryCard from "@/components/profile/ProfileSummaryCard";
 import QuickActions from "@/components/actions/QuickActions";
 import TodaySignalCard from "@/components/dashboard/TodaySignalCard";
+import ProfileRequiredCard from "@/components/empty/ProfileRequiredCard";
+import NoRelationshipsCard from "@/components/empty/NoRelationshipsCard";
+import { isProfileComplete } from "@/lib/profile/isProfileComplete";
 
 type Result = {
   gated?: boolean;
@@ -35,20 +38,29 @@ export default function AppPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [overview, setOverview] = useState<any | null>(null);
+  const [profile, setProfile] = useState<any | null>(null);
 
   useEffect(() => {
-    async function loadOverview() {
+    async function load() {
       if (!userId) return;
 
-      const res = await fetch(`/api/v1/dashboard/overview?userId=${encodeURIComponent(userId)}`, {
-        cache: "no-store"
-      });
+      const [overviewRes, profileRes] = await Promise.all([
+        fetch(`/api/v1/dashboard/overview?userId=${encodeURIComponent(userId)}`, {
+          cache: "no-store"
+        }),
+        fetch(`/api/v1/profile/read?userId=${encodeURIComponent(userId)}`, {
+          cache: "no-store"
+        })
+      ]);
 
-      const data = await res.json();
-      setOverview(data.overview || null);
+      const overviewData = await overviewRes.json();
+      const profileData = await profileRes.json();
+
+      setOverview(overviewData.overview || null);
+      setProfile(profileData.profile || null);
     }
 
-    loadOverview();
+    load();
   }, [userId]);
 
   async function run(path: string) {
@@ -70,6 +82,9 @@ export default function AppPage() {
     setLoading(false);
   }
 
+  const profileComplete = isProfileComplete(profile);
+  const relationshipCount = overview?.relationshipCount || 0;
+
   return (
     <AppShell
       title="Defrag Console"
@@ -77,16 +92,22 @@ export default function AppPage() {
     >
       <div style={{ display: "grid", gap: 24 }}>
         <ConsoleHero />
-        <TodaySignalCard overview={overview} />
+
+        {!profileComplete ? <ProfileRequiredCard /> : null}
 
         {overview ? (
-          <OverviewStats
-            relationshipCount={overview.relationshipCount}
-            participantCount={overview.participantCount}
-            eventCount={overview.eventCount}
-            dailyReadCount={overview.dailyReadCount}
-          />
+          <>
+            <TodaySignalCard overview={overview} />
+            <OverviewStats
+              relationshipCount={overview.relationshipCount}
+              participantCount={overview.participantCount}
+              eventCount={overview.eventCount}
+              dailyReadCount={overview.dailyReadCount}
+            />
+          </>
         ) : null}
+
+        {relationshipCount === 0 ? <NoRelationshipsCard /> : null}
 
         <div className="grid console-grid-two">
           <div className="input-card">
