@@ -7,8 +7,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${geist.className} ${interTight.className}`}>
-      <body>{children}</body>
+    <html lang="en">
+      <body className={`${geist.className} ${interTight.variable || ""}`}>
+        {children}
+      </body>
     </html>
   );
 }
