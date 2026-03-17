@@ -19,7 +19,7 @@ export async function generateDailyReadText({
   userId,
   period
 }: GenerateDailyReadArgs) {
-  const apiKey = process.env.OPENAI_API_KEY || process.env.AI_GATEWAY_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
     return fallbackRead(period);
@@ -27,14 +27,11 @@ export async function generateDailyReadText({
 
   try {
     const client = new OpenAI({
-      apiKey,
-      baseURL: process.env.AI_GATEWAY_API_KEY
-        ? "https://ai-gateway.vercel.sh/v1"
-        : undefined
+      apiKey
     });
 
     const response = await client.chat.completions.create({
-      model: process.env.AI_GATEWAY_MODEL || "gpt-4.1-mini",
+      model: "gpt-4.1-mini",
       response_format: { type: "json_object" },
       messages: [
         {
@@ -47,7 +44,7 @@ export async function generateDailyReadText({
           content:
             `Generate a ${period} daily read for user ${userId}. ` +
             `This is a premium relational guidance overview. ` +
-            `The output should feel like a 1-2 minute concise read for now, written in polished natural language.`
+            `The output should feel like a concise polished premium read.`
         }
       ]
     });

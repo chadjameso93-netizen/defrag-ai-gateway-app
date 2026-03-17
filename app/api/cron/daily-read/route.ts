@@ -52,7 +52,23 @@ export async function POST(req: NextRequest) {
         continue;
       }
 
-      const generated = await generateDailyReadText({ userId, period });
+      let generated;
+      try {
+        generated = await generateDailyReadText({ userId, period });
+      } catch {
+        generated =
+          period === "morning"
+            ? {
+                title: "Morning Read",
+                bodyText:
+                  "This morning favors a slower pace, steadier boundaries, and less force around emotionally loaded conversations. Let timing do more of the work than urgency."
+              }
+            : {
+                title: "Evening Read",
+                bodyText:
+                  "This evening favors reflection, softer interpretation, and more care with what you react to. Let the system settle before trying to force clarity."
+              };
+      }
 
       const { data: inserted, error: insertError } = await supabase
         .from("daily_reads")
