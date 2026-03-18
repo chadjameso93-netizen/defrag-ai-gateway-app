@@ -1,0 +1,10 @@
+#!/bin/zsh
+echo "defrag.app is still attached to:"
+echo "- defrag-frontend-v2 (defrag.app, www.defrag.app)"
+echo "- defrag2 (www.defrag.app)"
+echo "- defrag-api-prod-deploy / defragfeb (api.defrag.app)"
+echo ""
+echo "To move live domain here, remove defrag.app and www.defrag.app from old projects in Vercel dashboard first."
+echo "Then run:"
+echo "vercel domains inspect defrag.app"
+echo "vercel domains inspect www.defrag.app"

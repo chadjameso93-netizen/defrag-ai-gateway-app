@@ -24,7 +24,7 @@ export default function LaunchPage() {
 
         <section className="rail-map-surface">
           <div className="result-title">Domain</div>
-          <div className="result-copy">Move defrag.app to this Vercel project when the external project conflicts are cleared.</div>
+          <div className="result-copy">defrag.app still needs to be detached from older Vercel projects before cutover.</div>
         </section>
       </div>
     </AppShell>
