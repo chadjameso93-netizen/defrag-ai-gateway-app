@@ -27,6 +27,7 @@ export default function RelationshipDetailPage() {
 
   const [relationship, setRelationship] = useState<Relationship | null>(null);
   const [events, setEvents] = useState<TimelineEvent[]>([]);
+  const [summary, setSummary] = useState<any | null>(null);
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
@@ -34,18 +35,21 @@ export default function RelationshipDetailPage() {
   async function load() {
     if (!id || !userId) return;
 
-    const [relationshipRes, timelineRes] = await Promise.all([
+    const [relationshipRes, timelineRes, summaryRes] = await Promise.all([
       fetch(`/api/v1/relationships/${id}`, { cache: "no-store" }),
       fetch(`/api/v1/timeline?userId=${encodeURIComponent(userId)}&relationshipId=${encodeURIComponent(id)}`, {
         cache: "no-store"
-      })
+      }),
+      fetch(`/api/v1/relationships/${id}/summary`, { cache: "no-store" })
     ]);
 
     const relationshipData = await relationshipRes.json();
     const timelineData = await timelineRes.json();
+    const summaryData = await summaryRes.json();
 
     setRelationship(relationshipData.relationship || null);
     setEvents(timelineData.events || []);
+    setSummary(summaryData.summary || null);
   }
 
   useEffect(() => {
@@ -86,9 +90,9 @@ export default function RelationshipDetailPage() {
         <section className="rail-map-surface">
           <div className="result-title">Overview</div>
           <div className="result-copy">
-            {relationship
+            {summary?.body || (relationship
               ? `${relationship.label} is currently marked as ${relationship.status}.`
-              : "Loading relationship..."}
+              : "Loading relationship...")}
           </div>
         </section>
 
