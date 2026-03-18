@@ -1069,3 +1069,8 @@ select {
     padding: 16px;
   }
 }
+
+audio {
+  background: rgba(255,255,255,.04);
+  border-radius: 14px;
+}

@@ -1,56 +1,69 @@
-import InviteProfileForm from "@/components/invite/InviteProfileForm";
+"use client";
 
-type InvitePageProps = {
-  params: { token: string };
-};
+import { useMemo, useState } from "react";
+import AppShell from "@/components/layout/AppShell";
+import { useParams } from "next/navigation";
+import { useAppIdentity } from "@/hooks/useAppIdentity";
 
-async function getInvite(token: string) {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://defrag-premium.vercel.app";
-  const res = await fetch(`${base}/api/v1/invites/${token}`, {
-    cache: "no-store"
-  });
+export default function InviteAcceptPage() {
+  const params = useParams();
+  const token = useMemo(() => String(params?.token || ""), [params]);
+  const { userId } = useAppIdentity();
 
-  if (!res.ok) {
-    return null;
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [message, setMessage] = useState("Accept this invite to add the connection to your Defrag workspace.");
+
+  async function acceptInvite() {
+    if (!userId || !token) return;
+
+    setStatus("loading");
+    setMessage("Accepting invite...");
+
+    const res = await fetch("/api/v1/invites/accept", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": userId
+      },
+      body: JSON.stringify({
+        userId,
+        token
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setStatus("error");
+      setMessage(data.error || "Unable to accept invite.");
+      return;
+    }
+
+    setStatus("done");
+    setMessage("Invite accepted. The relationship is now part of your system.");
   }
 
-  return res.json();
-}
-
-export default async function InvitePage({ params }: InvitePageProps) {
-  const data = await getInvite(params.token);
-
   return (
-    <main className="app-page">
-      <div className="shell" style={{ paddingTop: 40, paddingBottom: 40 }}>
-        <div className="input-card" style={{ maxWidth: 760, margin: "0 auto" }}>
-          <div className="kicker">Invite</div>
-          <h1 className="section-title">Complete your profile to join Defrag</h1>
+    <AppShell
+      title="Accept invite"
+      subtitle="Add this connection to your Defrag workspace."
+    >
+      <div className="console-reset-layout">
+        <section className="rail-map-surface">
+          <div className="result-title">Connection invite</div>
+          <div className="result-copy">{message}</div>
 
-          {!data?.ok ? (
-            <p className="muted">This invite could not be found or may have expired.</p>
-          ) : (
-            <>
-              <p className="muted">
-                You have been invited to contribute your profile for a Defrag relationship view.
-              </p>
-
-              <div className="result-card" style={{ marginTop: 20 }}>
-                <div className="result-block">
-                  <div className="result-title">Invite status</div>
-                  <div className="result-copy">{data.invite.status}</div>
-                </div>
-                <div className="result-block">
-                  <div className="result-title">Channel</div>
-                  <div className="result-copy">{data.invite.channel}</div>
-                </div>
-              </div>
-
-              <InviteProfileForm token={params.token} />
-            </>
-          )}
-        </div>
+          <div className="actions" style={{ marginTop: 16 }}>
+            <button
+              className="btn btn-primary"
+              onClick={acceptInvite}
+              disabled={!userId || !token || status === "loading" || status === "done"}
+            >
+              {status === "loading" ? "Accepting..." : status === "done" ? "Accepted" : "Accept invite"}
+            </button>
+          </div>
+        </section>
       </div>
-    </main>
+    </AppShell>
   );
 }

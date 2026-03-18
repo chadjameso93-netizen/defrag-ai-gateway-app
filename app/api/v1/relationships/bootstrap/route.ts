@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
         owner_user_id: userId,
         label: "My system",
         relationship_type: "self",
-        status: "active"
+        status: "active",
+        updated_at: new Date().toISOString()
       });
     }
 

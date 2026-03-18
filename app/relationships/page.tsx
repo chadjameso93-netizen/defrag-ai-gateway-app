@@ -100,7 +100,7 @@ export default function RelationshipsPage() {
                     <strong>{item.label}</strong>
                     <div className="muted">{item.relationship_type}</div>
                   </div>
-                  <div className="relationship-status">{item.status}</div>
+                  <div className="relationship-status">Open workspace</div>
                 </a>
               ))
             )}
