@@ -94,13 +94,13 @@ export default function RelationshipsPage() {
               <div className="result-copy">No people yet. Add someone to start building your system.</div>
             ) : (
               relationships.map((item) => (
-                <div key={item.id} className="relationship-row">
+                <a key={item.id} href={`/relationships/${item.id}`} className="relationship-row">
                   <div>
                     <strong>{item.label}</strong>
                     <div className="muted">{item.relationship_type}</div>
                   </div>
                   <div className="relationship-status">{item.status}</div>
-                </div>
+                </a>
               ))
             )}
           </div>
