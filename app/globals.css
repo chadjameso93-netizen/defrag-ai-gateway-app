@@ -940,3 +940,33 @@ select {
   font-size: 13px;
   white-space: nowrap;
 }
+
+.relationship-list,
+.timeline-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.relationship-row,
+.timeline-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding-top: 12px;
+}
+
+.relationship-row:first-child,
+.timeline-row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.relationship-status,
+.timeline-date {
+  color: rgba(255,255,255,.56);
+  font-size: 13px;
+  white-space: nowrap;
+}
