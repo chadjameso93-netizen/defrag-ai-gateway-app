@@ -1,37 +1,38 @@
 "use client";
 
 import AppShell from "@/components/layout/AppShell";
-import { useAppIdentity } from "@/hooks/useAppIdentity";
-import AuthModeBanner from "@/components/auth/AuthModeBanner";
-import ProfileSummaryCard from "@/components/profile/ProfileSummaryCard";
-import PlanStatusCard from "@/components/dashboard/PlanStatusCard";
-import ProfileEditor from "@/components/settings/ProfileEditor";
+import Link from "next/link";
 
 export default function SettingsPage() {
-  const identity = useAppIdentity();
-
   return (
     <AppShell
       title="Settings"
-      subtitle="Account state, identity mode, profile state, and plan status live here."
+      subtitle="Manage profile, privacy, and plan."
     >
-      <div className="grid console-grid-two" style={{ gap: 24 }}>
-        <AuthModeBanner mode={identity.mode} email={identity.email} />
-        <PlanStatusCard userId={identity.userId} />
-      </div>
-
-      <div className="grid console-grid-two" style={{ gap: 24, marginTop: 24 }}>
-        <ProfileSummaryCard userId={identity.userId} />
-        <div className="card">
-          <div className="result-title">Current identity</div>
-          <div className="result-copy" style={{ marginTop: 12, overflowWrap: "anywhere" }}>
-            {identity.loading ? "Loading..." : identity.userId}
+      <div className="console-reset-layout">
+        <section className="rail-map-surface">
+          <div className="result-title">Profile</div>
+          <div className="result-copy">Update your birth details, current location, and account info.</div>
+          <div className="actions" style={{ marginTop: 14 }}>
+            <Link href="/onboarding" className="btn btn-secondary">Edit profile</Link>
           </div>
-        </div>
-      </div>
+        </section>
 
-      <div style={{ marginTop: 24 }}>
-        <ProfileEditor userId={identity.userId} />
+        <section className="rail-map-surface">
+          <div className="result-title">Privacy</div>
+          <div className="result-copy">Control what connected people can see and how invite links work.</div>
+          <div className="actions" style={{ marginTop: 14 }}>
+            <Link href="/privacy" className="btn btn-secondary">Privacy settings</Link>
+          </div>
+        </section>
+
+        <section className="rail-map-surface">
+          <div className="result-title">Plan</div>
+          <div className="result-copy">Manage subscription and billing access.</div>
+          <div className="actions" style={{ marginTop: 14 }}>
+            <Link href="/billing" className="btn btn-primary">Manage plan</Link>
+          </div>
+        </section>
       </div>
     </AppShell>
   );

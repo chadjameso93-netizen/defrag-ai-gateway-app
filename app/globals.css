@@ -5,3 +5,8 @@ html,body{
   color:#f4f4f5;
   font-family:-apple-system,BlinkMacSystemFont,system-ui;
 }
+
+.console-reset-layout {
+  display: grid;
+  gap: 18px;
+}
