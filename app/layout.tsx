@@ -1,5 +1,5 @@
 import "./globals.css";
-import { geist } from "./fonts";
+import { inter, interTight } from "./fonts";
 
 export default function RootLayout({
   children,
@@ -7,10 +7,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={geist.className}>
-        {children}
-      </body>
+    <html lang="en" className={`${inter.variable} ${interTight.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }
