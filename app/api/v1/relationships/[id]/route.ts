@@ -8,47 +8,51 @@ export async function GET(
   try {
     const supabase = getSupabaseAdmin();
 
-    const { data: relationship, error: relationshipError } = await supabase
+    const { data, error } = await supabase
       .from("relationships")
       .select("*")
       .eq("id", params.id)
-      .single();
+      .maybeSingle();
 
-    if (relationshipError || !relationship) {
-      return NextResponse.json(
-        { error: relationshipError?.message || "Relationship not found." },
-        { status: 404 }
-      );
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const { data: participants, error: participantsError } = await supabase
-      .from("relationship_participants")
+    return NextResponse.json({ relationship: data || null });
+  } catch {
+    return NextResponse.json({ error: "relationship_read_failed" }, { status: 500 });
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const supabase = getSupabaseAdmin();
+    const body = await req.json();
+
+    const updates: Record<string, any> = {
+      updated_at: new Date().toISOString()
+    };
+
+    if (body.label) updates.label = body.label;
+    if (body.relationshipType) updates.relationship_type = body.relationshipType;
+    if (body.status) updates.status = body.status;
+
+    const { data, error } = await supabase
+      .from("relationships")
+      .update(updates)
+      .eq("id", params.id)
       .select("*")
-      .eq("relationship_id", params.id)
-      .order("created_at", { ascending: true });
+      .maybeSingle();
 
-    if (participantsError) {
-      return NextResponse.json({ error: participantsError.message }, { status: 500 });
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const { data: invites, error: invitesError } = await supabase
-      .from("invites")
-      .select("*")
-      .eq("relationship_id", params.id)
-      .order("created_at", { ascending: false });
-
-    if (invitesError) {
-      return NextResponse.json({ error: invitesError.message }, { status: 500 });
-    }
-
-    return NextResponse.json({
-      ok: true,
-      relationship,
-      participants: participants || [],
-      invites: invites || []
-    });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Server error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ relationship: data || null });
+  } catch {
+    return NextResponse.json({ error: "relationship_update_failed" }, { status: 500 });
   }
 }

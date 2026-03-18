@@ -34,7 +34,7 @@ export default function RelationshipsPage() {
     if (!userId || !label.trim()) return;
     setLoading(true);
 
-    await fetch("/api/v1/relationships", {
+    const res = await fetch("/api/v1/relationships", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -45,6 +45,21 @@ export default function RelationshipsPage() {
         relationshipType: "connection"
       })
     });
+
+    const data = await res.json();
+
+    if (data?.relationship?.id) {
+      await fetch("/api/v1/relationship-summaries", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          relationshipId: data.relationship.id,
+          label
+        })
+      });
+    }
 
     setLabel("");
     setLoading(false);
