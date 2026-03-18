@@ -1,60 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/client";
-import { buildInitialProfileArtifacts } from "@/lib/profile/initializeProfile";
+import { persistProfileArtifacts } from "@/lib/profile/persistProfileArtifacts";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const userId = String(body.userId || "").trim();
-
-    if (!userId) {
-      return NextResponse.json({ error: "userId is required." }, { status: 400 });
-    }
-
-    const artifacts = buildInitialProfileArtifacts({
-      userId,
-      fullName: body.fullName || "",
-      birthDate: body.birthDate || "",
-      birthTime: body.birthTime || "",
-      birthTimeKnown: Boolean(body.birthTimeKnown),
-      birthPlace: body.birthPlace || "",
-      currentLocation: body.currentLocation || ""
-    });
+    const userId = body.userId || "11111111-1111-1111-1111-111111111111";
 
     const supabase = getSupabaseAdmin();
-    const { persistProfileArtifacts } = await import("@/lib/profile/persistProfileArtifacts");
-    const { persistProfileArtifacts } = await import("@/lib/profile/persistProfileArtifacts");
 
     await supabase.from("profiles").upsert({
       user_id: userId,
-      full_name: body.fullName || "",
-      birth_date: body.birthDate || null,
-      birth_time: artifacts.normalizedBirthInput.birth_time_effective,
-      birth_time_confidence: artifacts.normalizedBirthInput.birth_time_confidence,
-      birth_place: body.birthPlace || null,
-      current_location: body.currentLocation || null,
-      onboarding_focus: "one_person",
+      birth_date: body.birth_date || null,
+      birth_time: body.birth_time || null,
+      birth_place: body.birth_place || null,
       updated_at: new Date().toISOString()
-    }, { onConflict: "user_id" });
-
-    await supabase.from("daily_reads").insert({
-      user_id: userId,
-      read_date: new Date().toISOString().slice(0, 10),
-      period: "morning",
-      title: "Daily Read",
-      body_text: artifacts.narrativeSeed.body,
-      audio_url: null
     });
 
-    await persistProfileArtifacts(userId, artifacts);
-
-    return NextResponse.json({
-      ok: true,
-      status: "ready",
-      profile: artifacts
+    await persistProfileArtifacts(userId, {
+      normalizedBirthInput: {
+        birth_time_confidence: body.birth_time ? "exact" : "estimated_noon"
+      },
+      decisionProfile: {
+        strategy: "Pause before reacting",
+        authority: "Emotional clarity over time"
+      },
+      relationalBaseline: {
+        state: "stable_start"
+      },
+      narrativeSeed: {
+        headline: "You’re set up.",
+        body: "Ask something or add someone."
+      }
     });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Server error";
-    return NextResponse.json({ error: message }, { status: 500 });
+
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: "profile_init_failed" }, { status: 500 });
   }
 }
