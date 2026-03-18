@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/client";
+import { requireResolvedUserId } from "@/lib/server/authUser";
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const userId = String(searchParams.get("userId") || "").trim();
-
-    if (!userId) {
-      return NextResponse.json({ error: "userId_required" }, { status: 400 });
-    }
-
+    const userId = await requireResolvedUserId(req);
     const supabase = getSupabaseAdmin();
     const today = new Date().toISOString().slice(0, 10);
 
@@ -45,7 +40,8 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ ok: true, read: data || fallback });
-  } catch {
-    return NextResponse.json({ error: "daily_read_failed" }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "daily_read_failed";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }

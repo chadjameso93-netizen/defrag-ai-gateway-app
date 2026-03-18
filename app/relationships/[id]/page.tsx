@@ -39,7 +39,8 @@ export default function RelationshipDetailPage() {
     const [relationshipRes, timelineRes, summaryRes, stateRes] = await Promise.all([
       fetch(`/api/v1/relationships/${id}`, { cache: "no-store" }),
       fetch(`/api/v1/timeline?userId=${encodeURIComponent(userId)}&relationshipId=${encodeURIComponent(id)}`, {
-        cache: "no-store"
+        cache: "no-store",
+        headers: { "x-user-id": userId }
       }),
       fetch(`/api/v1/relationships/${id}/summary`, { cache: "no-store" }),
       fetch(`/api/v1/relationships/${id}/state`, { cache: "no-store" })
@@ -68,7 +69,8 @@ export default function RelationshipDetailPage() {
     await fetch("/api/v1/timeline", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "x-user-id": userId
       },
       body: JSON.stringify({
         userId,

@@ -37,7 +37,8 @@ export default function RelationshipsPage() {
     const res = await fetch("/api/v1/relationships", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "x-user-id": userId
       },
       body: JSON.stringify({
         userId,

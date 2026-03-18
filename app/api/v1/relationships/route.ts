@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/client";
+import { requireResolvedUserId } from "@/lib/server/authUser";
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const userId = String(searchParams.get("userId") || "").trim();
-
-    if (!userId) {
-      return NextResponse.json({ error: "userId_required" }, { status: 400 });
-    }
-
+    const userId = await requireResolvedUserId(req);
     const supabase = getSupabaseAdmin();
 
     const { data, error } = await supabase
@@ -23,22 +18,23 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ relationships: data || [] });
-  } catch {
-    return NextResponse.json({ error: "relationships_failed" }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "relationships_failed";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = getSupabaseAdmin();
     const body = await req.json();
-
-    const userId = String(body.userId || "").trim();
+    const userId = await requireResolvedUserId(req, body);
     const label = String(body.label || "").trim();
 
-    if (!userId || !label) {
-      return NextResponse.json({ error: "userId_and_label_required" }, { status: 400 });
+    if (!label) {
+      return NextResponse.json({ error: "label_required" }, { status: 400 });
     }
+
+    const supabase = getSupabaseAdmin();
 
     const { data, error } = await supabase
       .from("relationships")
@@ -49,14 +45,15 @@ export async function POST(req: NextRequest) {
         status: "active"
       })
       .select("*")
-      .single();
+      .maybeSingle();
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ relationship: data });
-  } catch {
-    return NextResponse.json({ error: "relationship_create_failed" }, { status: 500 });
+    return NextResponse.json({ relationship: data || null });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "relationship_create_failed";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }

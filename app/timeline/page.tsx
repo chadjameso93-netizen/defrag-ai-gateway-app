@@ -20,7 +20,8 @@ export default function TimelinePage() {
     async function load() {
       if (!userId) return;
       const res = await fetch(`/api/v1/timeline?userId=${encodeURIComponent(userId)}`, {
-        cache: "no-store"
+        cache: "no-store",
+        headers: { "x-user-id": userId }
       });
       const data = await res.json();
       setEvents(data.events || []);

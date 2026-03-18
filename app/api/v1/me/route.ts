@@ -1,20 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/client";
-import { getUserIdFromRequest } from "@/lib/server/userContext";
+import { requireResolvedUserId } from "@/lib/server/authUser";
 
 export async function GET(req: NextRequest) {
   try {
-    const userId = getUserIdFromRequest(req);
+    const userId = await requireResolvedUserId(req);
     const supabase = getSupabaseAdmin();
 
-    const [
-      { data: profile },
-      { data: decision },
-      { data: baseline },
-      { data: narrative },
-      { count: relationshipCount },
-      { count: dailyReadCount }
-    ] = await Promise.all([
+    const [{ data: profile }, { data: decision }, { data: baseline }, { data: narrative }, { count: relationshipCount }, { count: dailyReadCount }] = await Promise.all([
       supabase.from("profiles").select("*").eq("user_id", userId).maybeSingle(),
       supabase.from("decision_profiles").select("*").eq("user_id", userId).maybeSingle(),
       supabase.from("relational_baselines").select("*").eq("user_id", userId).maybeSingle(),
