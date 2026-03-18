@@ -22,10 +22,7 @@ export async function GET(req: NextRequest) {
       .maybeSingle();
 
     if (existing) {
-      return NextResponse.json({
-        ok: true,
-        read: existing
-      });
+      return NextResponse.json({ ok: true, read: existing });
     }
 
     const fallback = {
@@ -47,10 +44,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({
-      ok: true,
-      read: data || fallback
-    });
+    return NextResponse.json({ ok: true, read: data || fallback });
   } catch {
     return NextResponse.json({ error: "daily_read_failed" }, { status: 500 });
   }

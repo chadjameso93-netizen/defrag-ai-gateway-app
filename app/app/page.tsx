@@ -48,7 +48,7 @@ export default function AppPage() {
         fetch(`/api/v1/dashboard/overview?userId=${encodeURIComponent(userId)}`, {
           cache: "no-store"
         }),
-        fetch("/api/read", { cache: "no-store" })
+        fetch(`/api/v1/daily-read?userId=${encodeURIComponent(userId)}`, { cache: "no-store" })
       ]);
 
       const overviewData = await overviewRes.json();
