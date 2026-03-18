@@ -1004,3 +1004,8 @@ select {
     grid-template-columns: 1fr;
   }
 }
+
+.relationship-row {
+  text-decoration: none;
+  color: inherit;
+}
