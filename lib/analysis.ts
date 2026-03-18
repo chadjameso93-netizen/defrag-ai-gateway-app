@@ -1,8 +1,10 @@
 import OpenAI from "openai";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
-});
+function getClient() {
+  const apiKey = process.env.OPENAI_API_KEY || "";
+  if (!apiKey) return null;
+  return new OpenAI({ apiKey });
+}
 
 const SYSTEM_PROMPT = `
 You are Defrag AI.
@@ -25,7 +27,9 @@ Keep it calm, clear, and direct.
 `;
 
 export async function analyzeSituation(input: string) {
-  if (!input) {
+  const text = (input || "").trim();
+
+  if (!text) {
     return {
       summary: "Add a bit more detail so I can read the situation clearly.",
       perspectives: { you: "", them: "" },
@@ -35,28 +39,41 @@ export async function analyzeSituation(input: string) {
     };
   }
 
+  const client = getClient();
+
+  if (!client) {
+    return {
+      summary: "Here’s a simple first read of what may be happening.",
+      perspectives: {
+        you: "From your side, this can feel uncertain or heavy.",
+        them: "From their side, they may be processing, pulling back, or needing a little more room."
+      },
+      system: "This looks like a moment where the situation may still be settling.",
+      guidance: "Keep the next move simple and easy to receive.",
+      avoid: "Avoid pushing for clarity too quickly or sending too many follow-ups."
+    };
+  }
+
   const completion = await client.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
-      { role: "user", content: input }
+      { role: "user", content: text }
     ],
     temperature: 0.7
   });
 
-  const text = completion.choices[0].message.content || "";
-
-  // LIGHT STRUCTURE PARSE (keeps it flexible but usable)
-  const sections = text.split("\n").filter(Boolean);
+  const content = completion.choices[0]?.message?.content || "";
+  const lines = content.split("\n").map((x) => x.trim()).filter(Boolean);
 
   return {
-    summary: sections[0] || text,
+    summary: lines[0] || content || "Here’s a clear read of what may be happening.",
     perspectives: {
-      you: sections[1] || "",
-      them: sections[2] || ""
+      you: lines[1] || "From your side, this can feel uncertain or unclear.",
+      them: lines[2] || "From their side, they may still be processing or taking space."
     },
-    system: sections[3] || "",
-    guidance: sections[4] || "",
-    avoid: sections[5] || ""
+    system: lines[3] || "The wider pattern suggests this is not a moment to force resolution.",
+    guidance: lines[4] || "Keep the next move simple and lower-pressure.",
+    avoid: lines[5] || "Avoid escalating, overexplaining, or stacking messages."
   };
 }
