@@ -55,7 +55,7 @@ export default function AppPage() {
       const readData = await readRes.json();
 
       setOverview(overviewData.overview || null);
-      setDailyRead(readData.text || "");
+      setDailyRead(readData?.read?.body_text || "");
     }
 
     load();

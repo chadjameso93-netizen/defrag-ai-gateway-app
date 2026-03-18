@@ -28,6 +28,7 @@ export default function RelationshipDetailPage() {
   const [relationship, setRelationship] = useState<Relationship | null>(null);
   const [events, setEvents] = useState<TimelineEvent[]>([]);
   const [summary, setSummary] = useState<any | null>(null);
+  const [state, setState] = useState<any | null>(null);
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
@@ -35,21 +36,24 @@ export default function RelationshipDetailPage() {
   async function load() {
     if (!id || !userId) return;
 
-    const [relationshipRes, timelineRes, summaryRes] = await Promise.all([
+    const [relationshipRes, timelineRes, summaryRes, stateRes] = await Promise.all([
       fetch(`/api/v1/relationships/${id}`, { cache: "no-store" }),
       fetch(`/api/v1/timeline?userId=${encodeURIComponent(userId)}&relationshipId=${encodeURIComponent(id)}`, {
         cache: "no-store"
       }),
-      fetch(`/api/v1/relationships/${id}/summary`, { cache: "no-store" })
+      fetch(`/api/v1/relationships/${id}/summary`, { cache: "no-store" }),
+      fetch(`/api/v1/relationships/${id}/state`, { cache: "no-store" })
     ]);
 
     const relationshipData = await relationshipRes.json();
     const timelineData = await timelineRes.json();
     const summaryData = await summaryRes.json();
+    const stateData = await stateRes.json();
 
     setRelationship(relationshipData.relationship || null);
     setEvents(timelineData.events || []);
     setSummary(summaryData.summary || null);
+    setState(stateData.state || null);
   }
 
   useEffect(() => {
@@ -94,6 +98,13 @@ export default function RelationshipDetailPage() {
               ? `${relationship.label} is currently marked as ${relationship.status}.`
               : "Loading relationship...")}
           </div>
+        </section>
+
+        <section className="rail-map-surface">
+          <div className="result-title">Live state</div>
+          <div className="result-copy">{state?.label || "Loading live state..."}</div>
+          <div className="muted" style={{ marginTop: 8 }}>{state?.tone || ""}</div>
+          <div className="muted" style={{ marginTop: 8 }}>{state?.guidance || ""}</div>
         </section>
 
         <section className="rail-map-surface">

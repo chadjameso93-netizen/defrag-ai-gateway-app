@@ -1,63 +1,57 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDailyRead } from "@/lib/daily-read/getDailyRead";
 import { getSupabaseAdmin } from "@/lib/supabase/client";
-import { buildDailyReadContext } from "@/lib/daily-read/buildDailyReadContext";
-import { generateStateAwareDailyRead } from "@/lib/daily-read/generateStateAwareDailyRead";
 
 export async function GET(req: NextRequest) {
   try {
-    const userId = req.nextUrl.searchParams.get("userId");
+    const { searchParams } = new URL(req.url);
+    const userId = String(searchParams.get("userId") || "").trim();
 
     if (!userId) {
-      return NextResponse.json(
-        { error: "userId is required." },
-        { status: 400 }
-      );
-    }
-
-    const existing = await getDailyRead(userId);
-
-    if (existing.length > 0) {
-      return NextResponse.json({ ok: true, reads: existing, generated: false });
+      return NextResponse.json({ error: "userId_required" }, { status: 400 });
     }
 
     const supabase = getSupabaseAdmin();
     const today = new Date().toISOString().slice(0, 10);
 
-    const context = await buildDailyReadContext(userId);
+    const { data: existing } = await supabase
+      .from("daily_reads")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("read_date", today)
+      .eq("period", "morning")
+      .maybeSingle();
 
-    const morning = generateStateAwareDailyRead(context, "morning");
-    const evening = generateStateAwareDailyRead(context, "evening");
+    if (existing) {
+      return NextResponse.json({
+        ok: true,
+        read: existing
+      });
+    }
+
+    const fallback = {
+      user_id: userId,
+      read_date: today,
+      period: "morning",
+      title: "Daily Read",
+      body_text: "Stay simple today. Let the situation breathe before you try to define it too quickly.",
+      audio_url: null
+    };
 
     const { data, error } = await supabase
       .from("daily_reads")
-      .insert([
-        {
-          user_id: userId,
-          read_date: today,
-          period: "morning",
-          title: morning.title,
-          body_text: morning.bodyText,
-          audio_url: null
-        },
-        {
-          user_id: userId,
-          read_date: today,
-          period: "evening",
-          title: evening.title,
-          body_text: evening.bodyText,
-          audio_url: null
-        }
-      ])
-      .select("*");
+      .upsert(fallback, { onConflict: "user_id,read_date,period" })
+      .select("*")
+      .maybeSingle();
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ ok: true, reads: data || [], generated: true });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Server error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({
+      ok: true,
+      read: data || fallback
+    });
+  } catch {
+    return NextResponse.json({ error: "daily_read_failed" }, { status: 500 });
   }
 }
