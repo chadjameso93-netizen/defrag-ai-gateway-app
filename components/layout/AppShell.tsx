@@ -9,6 +9,7 @@ const items = [
   { href: "/app", label: "AI" },
   { href: "/relationships", label: "People" },
   { href: "/timeline", label: "Timeline" },
+  { href: "/daily-read", label: "Daily Read" },
   { href: "/settings", label: "Settings" }
 ];
 
