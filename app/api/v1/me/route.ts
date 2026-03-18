@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/client";
+import { requireUserIdFromQuery } from "@/lib/server/requireUserId";
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
-
-    if (!userId) {
-      return NextResponse.json({ error: "userId_required" }, { status: 400 });
-    }
-
+    const userId = await requireUserIdFromQuery(req);
     const supabase = getSupabaseAdmin();
 
     const [{ data: profile }, { data: decision }, { data: baseline }, { data: narrative }] = await Promise.all([
@@ -25,7 +20,8 @@ export async function GET(req: NextRequest) {
       baseline: baseline?.baseline_json || null,
       narrative: narrative?.narrative_json || null
     });
-  } catch {
-    return NextResponse.json({ error: "me_failed" }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "me_failed";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }

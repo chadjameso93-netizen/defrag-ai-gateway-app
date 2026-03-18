@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/client";
+import { requireUserIdFromBody } from "@/lib/server/requireUserId";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const userId = String(body.userId || "").trim();
-
-    if (!userId) {
-      return NextResponse.json({ error: "userId_required" }, { status: 400 });
-    }
-
+    const { userId } = await requireUserIdFromBody(req);
     const supabase = getSupabaseAdmin();
 
     const { data: existing } = await supabase
@@ -28,7 +23,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ error: "bootstrap_failed" }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "bootstrap_failed";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }

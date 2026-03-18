@@ -113,6 +113,17 @@ export default function AppPage() {
             </div>
           </div>
 
+          <div className="workspace-summary-band">
+            <div>
+              <span>Relationships</span>
+              <strong>{overview?.relationshipCount || 0}</strong>
+            </div>
+            <div>
+              <span>Daily reads</span>
+              <strong>{overview?.dailyReadCount || 0}</strong>
+            </div>
+          </div>
+
           <div className="chat-thread">
             {!text && !result ? (
               <div className="chat-empty-state">

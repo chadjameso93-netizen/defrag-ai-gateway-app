@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { getSupabaseAdmin } from "@/lib/supabase/client";
+import { requireUserIdFromBody } from "@/lib/server/requireUserId";
 
 export async function POST(req: NextRequest) {
   try {
     const supabase = getSupabaseAdmin();
-    const body = await req.json();
+    const { userId, body } = await requireUserIdFromBody(req);
 
     const rawToken = String(body.token || "");
-    const invitedUserId = String(body.userId || "");
-
-    if (!rawToken || !invitedUserId) {
-      return NextResponse.json({ error: "token_and_user_required" }, { status: 400 });
+    if (!rawToken) {
+      return NextResponse.json({ error: "token_required" }, { status: 400 });
     }
 
     const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
@@ -30,7 +29,7 @@ export async function POST(req: NextRequest) {
 
     await supabase.from("relationships").insert({
       owner_user_id: invite.owner_user_id,
-      other_user_id: invitedUserId,
+      other_user_id: userId,
       label: invite.relationship_label || "Connection",
       relationship_type: "connection",
       status: "active"
@@ -42,7 +41,8 @@ export async function POST(req: NextRequest) {
       .eq("id", invite.id);
 
     return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ error: "accept_invite_failed" }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "accept_invite_failed";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }
